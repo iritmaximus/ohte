@@ -17,12 +17,14 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
+    needs: setup
     steps:
       - name: Run pylint
         run: poetry run pylint src
 
   test:
     runs-on: ubuntu-latest
+    needs: setup
     steps:
       - name: Run tests
         run: poetry run pytest src
