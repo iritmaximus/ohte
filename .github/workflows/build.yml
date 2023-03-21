@@ -1,0 +1,21 @@
+name: GH actions test/lint
+on: [push]
+
+jobs:
+  Setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+
+      - name: Run image
+        uses: abatilo/actions-poetry@v2
+
+      - name: Install packages
+        run: poetry install
+
+      - name: Run pylint
+        run: poetry run pylint src
+
+      - name: Run tests
+        run: poetry run pytest src
