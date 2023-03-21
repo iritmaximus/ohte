@@ -1,5 +1,5 @@
 # Ohte
-![example workflow](https://github.com/iritmaximus/ohte/actions/workflows/build/badge.svg)
+![example workflow](https://github.com/iritmaximus/ohte/actions/workflows/build.yml/badge.svg)
 
 ## Project-idea
 Leaderboard for a chess club. Program that calculates and displays ratings of
