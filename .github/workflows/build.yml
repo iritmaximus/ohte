@@ -2,7 +2,7 @@ name: GH actions test/lint
 on: [push]
 
 jobs:
-  Setup:
+  setup:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -14,8 +14,15 @@ jobs:
       - name: Install packages
         run: poetry install
 
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
       - name: Run pylint
         run: poetry run pylint src
 
+  test:
+    runs-on: ubuntu-latest
+    steps:
       - name: Run tests
         run: poetry run pytest src
