@@ -17,6 +17,7 @@ uses official [Elo](https://en.wikipedia.org/wiki/Chess_rating_system#Elo_rating
 * Analyze openings
 * Include the db things in the ui -> for ex. show list of all games
 * Add ui to play games of chess
+* Telegram bot to work as the interface to add/edit games + other things
 
 
 ## Documentation
