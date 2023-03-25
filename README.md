@@ -22,6 +22,20 @@ uses official [Elo](https://en.wikipedia.org/wiki/Chess_rating_system#Elo_rating
 
 ## Documentation
 
+### Architecture
+
+#### Main components
+* Chess rating calculator
+* DB interface
+* RESTful API to access all data
+* Authentication (tokens?)
+
+#### Add-on components
+* Choose one to interact with data
+    - Telegram bot
+    - Local gui app
+    - web frontend
+* Analyze games
 
 ## Using the app
 
