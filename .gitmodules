@@ -1,0 +1,3 @@
+[submodule "ot-harjoitustyo"]
+	path = ot-harjoitustyo
+	url = git@github.com:iritmaximus/ot-harjoitustyo.git
