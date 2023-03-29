@@ -65,45 +65,37 @@ class TestChess(unittest.TestCase):
     def test_rating_calculate_on_equal_game_white_wins(self):
         rating = ChessRating(1000, 1000)
         rating.game_result(1, 0)
-        rating.calculate_chess_rating()
         self.assertEqual(rating.white, 1012)
 
     def test_rating_calculate_on_equal_game_black_loses(self):
         rating = ChessRating(1000, 1000)
         rating.game_result(1, 0)
-        rating.calculate_chess_rating()
         self.assertEqual(rating.black, 988)
 
     def test_rating_calculate_on_unequal_game_white_wins(self):
         self.rating.game_result(1, 0)
-        self.rating.calculate_chess_rating()
         self.assertEqual(self.rating.white, 1206)
 
     def test_rating_calculate_on_unequal_game_black_loses(self):
         self.rating.game_result(1, 0)
-        self.rating.calculate_chess_rating()
         self.assertEqual(self.rating.black, 994)
 
     def test_rating_calculate_on_equal_game_draw_white(self):
         rating = ChessRating(1000, 1000)
         rating.game_result(0.5, 0.5)
-        rating.calculate_chess_rating()
         self.assertEqual(rating.white, 1000)
 
     def test_rating_calculate_on_equal_game_draw_black(self):
         rating = ChessRating(1000, 1000)
         rating.game_result(0.5, 0.5)
-        rating.calculate_chess_rating()
         self.assertEqual(rating.black, 1000)
 
     def test_rating_calculate_on_unequal_game_draw_white(self):
         self.rating.game_result(0.5, 0.5)
-        self.rating.calculate_chess_rating()
         self.assertEqual(self.rating.white, 1194)
 
     def test_rating_calculate_on_unequal_game_draw_black(self):
         self.rating.game_result(0.5, 0.5)
-        self.rating.calculate_chess_rating()
         self.assertEqual(self.rating.black, 1006)
 
     def test_rating_calculate_fail_if_no_game_score(self):

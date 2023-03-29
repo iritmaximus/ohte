@@ -60,6 +60,7 @@ class ChessRating:
         ):
             self.__white_score = white_score
             self.__black_score = black_score
+            self.calculate_chess_rating()
 
         else:
             raise ValueError("Incorrect result given for a game")
@@ -82,7 +83,7 @@ class ChessRating:
         self, white_adjustment: int = 24, black_adjustment: int = 24
     ):
         """
-        Method that counts the new rating of two players after a played game.
+        Counts the new rating of two players after a played game.
         See the formula: https://en.wikipedia.org/wiki/Elo_rating_system#Mathematical_details
         """
         scores = self.expected_scores()
