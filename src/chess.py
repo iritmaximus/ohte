@@ -1,6 +1,6 @@
 """All things chess"""
 
-from typing import Tuple
+from typing import Tuple  # for typehint
 
 
 class ChessRating:
@@ -13,6 +13,8 @@ class ChessRating:
     :param black_score: result of a game, win 1, lose 0, draw 1/2, -1 not set
     """
 
+    DEFAULT_ADJUSTMENT = 24
+
     def __init__(self, white, black):
         self.__white = white
         self.__black = black
@@ -21,13 +23,13 @@ class ChessRating:
 
     @property
     def white(self) -> int:
-        """:returns: current rating of white"""
-        return self.__white
+        """:returns: current rounded rating of white"""
+        return round(self.__white)
 
     @property
     def black(self) -> int:
-        """:returns: current rating of black"""
-        return self.__black
+        """:returns: current rounded rating of black"""
+        return round(self.__black)
 
     @property
     def white_score(self) -> int | float:
@@ -50,8 +52,17 @@ class ChessRating:
         :param black: score of the game for black
         """
 
-        self.__white_score = white_score
-        self.__black_score = black_score
+        # TODO remove "too many booleans"
+        if (
+            (white_score == 1 and black_score == 0)
+            or (white_score == 0 and black_score == 1)
+            or (white_score == 0.5 and black_score == 0.5)
+        ):
+            self.__white_score = white_score
+            self.__black_score = black_score
+
+        else:
+            raise ValueError("Incorrect result given for a game")
 
     def expected_scores(self) -> Tuple[float, float]:
         """
@@ -67,9 +78,19 @@ class ChessRating:
         black_expected_score = 1 / (1 + 10 ** ((self.__white - self.__black) / 400))
         return (white_expected_score, black_expected_score)
 
-    def calculate_chess_rating(self):
+    def calculate_chess_rating(
+        self, white_adjustment: int = 24, black_adjustment: int = 24
+    ):
         """
-        Method that counts the new rating of two players
-        after a played game
+        Method that counts the new rating of two players after a played game.
         See the formula: https://en.wikipedia.org/wiki/Elo_rating_system#Mathematical_details
         """
+        scores = self.expected_scores()
+
+        if self.white_score == -1 or self.black_score == -1:
+            raise ValueError(
+                f"Both players don't have a valid score W:{self.white_score} - B:{self.black_score}"
+            )
+
+        self.__white += white_adjustment * (self.white_score - scores[0])
+        self.__black += black_adjustment * (self.black_score - scores[1])
