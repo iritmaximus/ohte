@@ -56,7 +56,7 @@ class ChessRating:
         if (
             (white_score == 1 and black_score == 0)
             or (white_score == 0 and black_score == 1)
-            or (white_score == 0.5 and black_score == 0.5)
+            or (white_score == black_score == 0.5)
         ):
             self.__white_score = white_score
             self.__black_score = black_score
