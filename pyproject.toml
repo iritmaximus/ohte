@@ -7,12 +7,13 @@ readme = "README.md"
 
 
 [tool.poe.tasks]
-test = "pytest src"
-testcov = "coverage run --branch -m pytest src"
-testcovhtml = "coverage html"
+test = "coverage run --branch -m pytest src"
+testhtml = "coverage html"
 openhtml = "firefox htmlcov/index.html"
-test_full = ["testcov", "testcovhtml"]
-test_full_open = ["testcov", "testcovhtml", "openhtml"]
+test_full = ["test", "testhtml"]
+test_full_open = ["test", "testhtml", "openhtml"]
+lint = "pylint src"
+build = ["test", "testhtml", "lint"]
 
 
 [tool.pytest.ini_options]
