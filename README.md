@@ -7,6 +7,9 @@ chess players in a chess club. The rating is counted based on game-results and
 uses official [Elo](https://en.wikipedia.org/wiki/Chess_rating_system#Elo_rating_system) rating system.
 
 
+## Note
+Before installation make sure you have at least `python>=3.10` and `poetry>=1.4` installed
+
 ## Documentation
 
 * [changelog](./docs/changelog.md)
