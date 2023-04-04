@@ -1,0 +1,35 @@
+Date:   Fri Mar 17 13:42:33 2023 +0200
+
+    lisätty moi
+
+ kolmas.txt | 1 +
+ toinen.txt | 1 +
+ 2 files changed, 2 insertions(+)
+
+commit 146d3ef1a9b69c5d600972124424c3122e2caa36
+Author: iritmaximus <aaro.koivukangas@gmail.com>
+Date:   Fri Mar 17 13:41:37 2023 +0200
+
+    lisätty tiedosto
+
+ kolmas.txt | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+commit a01013d5897c635e7cb69e5a1ea5bb6d717b1adc
+Author: iritmaximus <aaro.koivukangas@gmail.com>
+Date:   Fri Mar 17 13:40:48 2023 +0200
+
+    muutos ja lisäys
+
+ tiedosto.txt | 1 +
+ toinen.txt   | 0
+ 2 files changed, 1 insertion(+)
+
+commit 353ba164e9a79e5dcde55e6e069f4d35412b427a
+Author: iritmaximus <aaro.koivukangas@gmail.com>
+Date:   Fri Mar 17 13:40:07 2023 +0200
+
+    tiedosto.txt luoto
+
+ tiedosto.txt | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
