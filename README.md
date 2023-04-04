@@ -22,6 +22,11 @@ uses official [Elo](https://en.wikipedia.org/wiki/Chess_rating_system#Elo_rating
 
 ## Documentation
 
+* [changelog](./docs/changelog.md)
+* [hours](./docs/hours.md)
+* [instructions](./docs/instructions.md)
+* [tests](./docs/tests.md)
+
 ### Architecture
 
 #### Main components
@@ -37,7 +42,7 @@ uses official [Elo](https://en.wikipedia.org/wiki/Chess_rating_system#Elo_rating
     - web frontend
 * Analyze games
 
-## Using the app
+
 
 ### Installation
 ### Running
