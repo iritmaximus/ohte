@@ -7,11 +7,13 @@ readme = "README.md"
 
 
 [tool.poe.tasks]
+start = "echo 'Nothing to run yet, import class to run'"
 test = "coverage run --branch -m pytest src"
 testhtml = "coverage html"
 openhtml = "firefox htmlcov/index.html"
 test_full = ["test", "testhtml"]
 test_full_open = ["test", "testhtml", "openhtml"]
+coverage-report = ["testhtml"]
 lint = "pylint src"
 build = ["test", "testhtml", "lint"]
 

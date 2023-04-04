@@ -27,6 +27,19 @@ uses official [Elo](https://en.wikipedia.org/wiki/Chess_rating_system#Elo_rating
 * [instructions](./docs/instructions.md)
 * [tests](./docs/tests.md)
 
+### Note
+The command to invoke tests is slightly different than the
+example setup as I am using poe and not invoke.
+The poetry shell environment must be entered first after which
+the commands are
+
+```bash
+poetry shell
+poe start
+poe test
+poe coverage-report
+```
+
 ### Architecture
 
 #### Main components
