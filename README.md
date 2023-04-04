@@ -13,6 +13,8 @@ uses official [Elo](https://en.wikipedia.org/wiki/Chess_rating_system#Elo_rating
 * [hours](./docs/hours.md)
 * [instructions](./docs/instructions.md)
 * [tests](./docs/tests.md)
+* [requirements](./docs/requirements.md)
+* [architecture](./docs/architecture.md)
 
 ### Note
 The command to invoke tests is slightly different than the
