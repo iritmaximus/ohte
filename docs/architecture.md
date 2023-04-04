@@ -8,9 +8,9 @@ is not much to it yet.
 
 There exists only
 ```mermaid
-    classDiagram
-        ChessRating{
-            white
-            black
-        }
+ classDiagram
+      class ChessRating{
+          white
+          black
+      }
 ```
