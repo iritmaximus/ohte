@@ -2,6 +2,9 @@
 
 ## Installation
 
+Make sure you have at least `python>=3.10` and `poetry>=1.4` installed
+After that run
+
 ```bash
 poetry install
 ```
