@@ -20,8 +20,8 @@ def db_url():
 
 def env():
     """:returns: current environment, prod, dev etc"""
-    env = getenv("ENV")
-    if not env:
+    env_var = getenv("ENV")
+    if not env_var:
         print("ENV not set, defaulting to production")
-        env = "production"
-    return env
+        return "production"
+    return env_var
