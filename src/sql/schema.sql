@@ -1,13 +1,18 @@
 CREATE TABLE IF NOT EXISTS Users (
-    id integer primary key autoincrement not null,
+    id serial primary key not null,
     name varchar(255) not null,
     rating integer
-)
+);
 
 CREATE TABLE IF NOT EXISTS Games (
-    id integer primary key autoincrement not null,
+    id serial primary key not null,
     result varchar(10),
-    user_id integer not null,
-    foreign key (user_id)
+    white_id integer,
+    black_id integer,
+    foreign key (white_id)
         references Users (id)
-)
+            on delete set null,
+    foreign key (black_id)
+        references Users (id)
+            on delete set null
+);
