@@ -1,33 +1,16 @@
 """
 Acts as an interface to a sql-db connection
 """
-import sqlite3
+import psycopg2
+import config
 
 
-def test_db():
-    """Creates a test db and initializes it"""
-    # FIXME move to proper test db
-    # TODO Execute the schema from a file
+def init_db():
+    """Creates the sql tables from a schema file"""
 
-    db = sqlite3.connect("test.db")
-    sql = """
-    CREATE TABLE IF NOT EXISTS Users (
-            id integer primary key autoincrement not null,
-            name varchar(255) not null,
-            rating integer
-    )
-    """
-    db.execute(sql)
-    sql = """
-    CREATE TABLE IF NOT EXISTS Games (
-            id integer primary key autoincrement not null,
-            result varchar(10),
-            user_id integer not null,
-            foreign key (user_id)
-                references Users (id)
-    )
-    """
-    db.execute(sql)
+    db = psycopg2.connect(config.db_url())
+    with open("./src/sql/schema.sql", "r", encoding="utf8") as sqlfile:
+        db.execute(sqlfile.open())
     db.close()
 
 
@@ -59,13 +42,11 @@ def create_user(username: str, rating: int = 1200):
 
 def create_db_connection():
     """
-    Creates db variable to connect to the db
+    Creates db variable to connect to the db depending on the env
+    the program is run, test, production and dev
 
     :returns: db connection object
     """
-    # FIXME move this to be a proper database when get home
-    return sqlite3.connect("test.db")
-
-
-if __name__ == "__main__":
-    test_db()
+    if config.env() == "production":
+        return psycopg2.connect(config.db_url())
+    return psycopg2.connect(config.test_db_url())
