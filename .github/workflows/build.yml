@@ -4,7 +4,10 @@ on: [push]
 jobs:
   ci:
     runs-on: ubuntu-latest
-    environment: test
+    env:
+      POSTGRES_URL: ${{secrets.POSTGRES_URL}}
+      TEST_POSTGRES_URL: ${{secrets.TEST_POSTGRES_URL}}
+      ENV: production
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
