@@ -1,14 +1,11 @@
 name: GH actions test/lint
 on: [push]
 
-env:
-  POSTGRES_URL: ${{secrets.POSTGRES_URL}}
-  TEST_POSTGRES_URL: ${{secrets.TEST_POSTGRES_URL}}
-  ENV: production
 
 jobs:
   ci:
     runs-on: ubuntu-latest
+    environment: test
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
@@ -23,4 +20,8 @@ jobs:
         run: poetry run pylint src
 
       - name: Run tests
+        env:
+          POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
+          TEST_POSTGRES_URL: ${{ secrets.TEST_POSTGRES_URL }}
+          ENV: production
         run: poetry run pytest src
