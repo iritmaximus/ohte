@@ -1,17 +1,41 @@
 """
-Acts as an interface to a sql-db connection
+Acts as an interface to a postgresql-db connection
 """
-import psycopg2
-import config
+from sqlalchemy import text
+
+import src
 
 
 def init_db():
     """Creates the sql tables from a schema file"""
 
-    db = psycopg2.connect(config.db_url())
+    db = create_db_connection(src.engine)
     with open("./src/sql/schema.sql", "r", encoding="utf8") as sqlfile:
-        db.execute(sqlfile.open())
+        db.execute(text(sqlfile.open()))
     db.close()
+
+
+def check_user_exists(username: str):
+    """Checks if user exists in the database
+
+    :param username: username to check
+    :returns: boolean, if user exists
+    """
+    print(username)
+
+
+def get_user_id(username: str):
+    """Returns the id of the user by it's username
+
+    :param username: username of the user
+    :returns: int | None, id of the user or none if no user found
+    """
+    sql = text("SELECT id FROM Users WHERE name=:username")
+    with create_db_connection() as db:
+        result = db.execute(sql, {"username": username}).fetchone()
+        if result:
+            return result[0]
+        return None
 
 
 def create_user(username: str, rating: int = 1200):
@@ -40,13 +64,11 @@ def create_user(username: str, rating: int = 1200):
     db.close()
 
 
-def create_db_connection():
+def create_db_connection(engine=src.engine):
     """
-    Creates db variable to connect to the db depending on the env
-    the program is run, test, production and dev
+    Creates a connection based on the engine given.
 
+    :param engine: sqlalchemy engine
     :returns: db connection object
     """
-    if config.env() == "production":
-        return psycopg2.connect(config.db_url())
-    return psycopg2.connect(config.test_db_url())
+    return engine.connect()

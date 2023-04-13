@@ -8,7 +8,7 @@ readme = "README.md"
 
 [tool.poe.tasks]
 start = "echo 'Nothing to run yet, import class to run'"
-test = "coverage run --branch -m pytest src"
+test = "coverage run --branch -m pytest src --timeout=5"
 testhtml = "coverage html"
 openhtml = "firefox htmlcov/index.html"
 test_full = ["test", "testhtml"]
@@ -27,6 +27,7 @@ pythonpath = [
 python = "^3.10"
 flask = "^2.2.3"
 psycopg2 = "^2.9.6"
+sqlalchemy = "^2.0.9"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -39,6 +40,7 @@ python-dotenv = "^1.0.0"
 
 [tool.poetry.group.test.dependencies]
 coverage = "^7.2.2"
+pytest-timeout = "^2.1.0"
 
 [build-system]
 requires = ["poetry-core"]
