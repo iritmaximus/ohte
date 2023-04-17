@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS Users (
     id serial primary key not null,
-    name varchar(255) not null,
-    rating integer
+    name varchar(255) not null unique,
+    rating integer CONSTRAINT positive_rating CHECK (rating > 0)
 );
 
 CREATE TABLE IF NOT EXISTS Games (
