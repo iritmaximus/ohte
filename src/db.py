@@ -6,22 +6,37 @@ from sqlalchemy import text
 import src
 
 
-def init_db():
-    """Creates the sql tables from a schema file"""
-
-    db = create_db_connection(src.engine)
-    with open("./src/sql/schema.sql", "r", encoding="utf8") as sqlfile:
-        db.execute(text(sqlfile.open()))
-    db.close()
-
-
 def check_user_exists(username: str):
     """Checks if user exists in the database
 
     :param username: username to check
     :returns: boolean, if user exists
     """
-    print(username)
+    user_id = get_user_id(username)
+    if user_id:
+        return True
+    return False
+
+
+def get_user_rating(username: str):
+    """Get user's rating by username
+
+    :param username: username of the user
+    :raises ValueError: if the user doesnt exist
+    """
+    user_id = get_user_id(username)
+    if not user_id:
+        raise ValueError("User not found")
+
+    sql = text("SELECT rating FROM Users WHERE id=:user_id")
+    with create_db_connection() as db:
+        result = db.execute(sql, {"user_id": user_id}).fetchone()
+        if result:
+            return result[0]
+
+        # cant test this :( rip 100% as to result to be none would mean something went wrong with
+        # the connection (internet) or there was concurrency errors
+        raise ValueError(f"No rating found for id {user_id}")
 
 
 def get_user_id(username: str):
@@ -44,24 +59,33 @@ def create_user(username: str, rating: int = 1200):
 
     :param username: username of the new user
     :param rating: the rating the new user has (defaults to 1200)
+    :raises ValueError: if user exists with username
     """
 
-    db = create_db_connection()
-    sql = """
-    SELECT id FROM Users
-    WHERE name=:username
-    """
-    result = db.execute(sql, {"username": username}).fetchall()
-    if result:
+    if check_user_exists(username):
         raise ValueError("User already exists")
 
-    sql = """
-    INSERT INTO Users (name, rating)
-    VALUES
-        (:username, :rating)
+    with create_db_connection() as db:
+        sql = text("INSERT INTO Users (name, rating) VALUES (:username, :rating)")
+        db.execute(sql, {"username": username, "rating": rating})
+        db.commit()
+
+
+def update_user_rating(username: str, rating: int):
     """
-    db.execute(sql, {"username": username, "rating": rating})
-    db.close()
+    Updates the rating of a player
+    :param username: username of the player
+    :param rating: new rating of the player ("full rating" not how much it changed)
+    :raises ValueError: if the user does not exist
+    """
+    if not check_user_exists(username):
+        raise ValueError("User does not exist")
+    user_id = get_user_id(username)
+
+    sql = text("UPDATE Users SET rating=:rating WHERE id=:user_id")
+    with create_db_connection() as db:
+        db.execute(sql, {"rating": rating, "user_id": user_id})
+        db.commit()
 
 
 def create_db_connection(engine=src.engine):

@@ -89,8 +89,43 @@ class TestPostgresItems(TestCase):
         self.assertEqual(result, [("moi",), ("hei",)])
 
     def test_get_user_id(self):
-        result = db.get_user_id("moi")
-        self.assertEqual(result, 1)
+        result = db.get_user_id("hei")
+        self.assertEqual(result, 2)
+
+    def test_check_user_exists_true(self):
+        result = db.check_user_exists("moi")
+        self.assertEqual(result, True)
+
+    def test_check_user_exists_false(self):
+        result = db.check_user_exists("hellurei")
+        self.assertEqual(result, False)
+
+    def test_create_user_doesnt_exist(self):
+        result = db.check_user_exists("moikka")
+        self.assertEqual(result, False)
+
+    def test_create_user_new(self):
+        db.create_user("moikka")
+        result = db.check_user_exists("moikka")
+        self.assertEqual(result, True)
+
+    def test_create_user_exists(self):
+        self.assertRaises(ValueError, db.create_user, "moi")
+
+    def test_get_user_rating_exists(self):
+        result = db.get_user_rating("moi")
+        self.assertEqual(result, 1000)
+
+    def test_get_user_rating_doesnt_exist(self):
+        self.assertRaises(ValueError, db.get_user_rating, "heippa")
+
+    def test_update_user_rating_exists(self):
+        db.update_user_rating("moi", 1205)
+        result = db.get_user_rating("moi")
+        self.assertEqual(result, 1205)
+
+    def test_update_user_rating_doest_exist(self):
+        self.assertRaises(ValueError, db.update_user_rating, "hellou", 1134)
 
     def tearDown(self):
         self.db.close()
