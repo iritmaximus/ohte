@@ -28,6 +28,7 @@ python = "^3.10"
 flask = "^2.2.3"
 psycopg2 = "^2.9.6"
 sqlalchemy = "^2.0.9"
+fastapi = {extras = ["all"], version = "^0.95.1"}
 
 
 [tool.poetry.group.dev.dependencies]
