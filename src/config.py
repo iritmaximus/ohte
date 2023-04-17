@@ -18,14 +18,6 @@ def db_url():
     return postgres_url
 
 
-def test_db_url():
-    """:returns: the db url defined in .env file"""
-    postgres_url = getenv("TEST_POSTGRES_URL")
-    if not postgres_url:
-        raise EnvironmentError("No TEST db url found")
-    return postgres_url
-
-
 def env():
     """:returns: current environment, prod, dev etc"""
     env_var = getenv("ENV")
