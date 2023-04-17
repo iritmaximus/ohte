@@ -21,6 +21,7 @@
 * Graphical user interface.
 * Backend server API
 * Database to store games/ratings
+* Uses async/await
 * Possible to save all moves of a game
 * Integrate [stockfish](https://github.com/official-stockfish/Stockfish) (chess-engine) to analyze games that have moves
 * Analyze openings
