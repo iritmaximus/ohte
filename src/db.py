@@ -1,7 +1,9 @@
 """
 Acts as an interface to a postgresql-db connection
 """
+
 from sqlalchemy import text
+from typing import Tuple  # for type hint
 
 import src
 
@@ -12,10 +14,28 @@ def check_user_exists(username: str):
     :param username: username to check
     :returns: boolean, if user exists
     """
+
     user_id = get_user_id(username)
     if user_id:
         return True
     return False
+
+
+def get_all_users():
+    """Queries the database for all users and their ratings
+
+    :returns: list of users and ratings
+    """
+
+    sql = text("SELECT name, rating FROM Users")
+    with create_db_connection() as db:
+        result = db.execute(sql).fetchall()
+        if result:
+            rows = []
+            for x in result:
+                rows.append({"name": x[0], "rating": x[1]})
+            return rows
+        return None
 
 
 def get_user_rating(username: str):
@@ -24,6 +44,7 @@ def get_user_rating(username: str):
     :param username: username of the user
     :raises ValueError: if the user doesnt exist
     """
+
     user_id = get_user_id(username)
     if not user_id:
         raise ValueError("User not found")
@@ -45,12 +66,33 @@ def get_user_id(username: str):
     :param username: username of the user
     :returns: int | None, id of the user or none if no user found
     """
+
     sql = text("SELECT id FROM Users WHERE name=:username")
     with create_db_connection() as db:
         result = db.execute(sql, {"username": username}).fetchone()
         if result:
             return result[0]
         return None
+
+
+def get_user_data(user_id: int) -> Tuple[int, str, int]:
+    """Queries the database for user by id and returns
+        user id,
+        name,
+        rating
+
+    :param user_id: id of the user
+    :returns: user id, name and rating
+    :raises ValueError: if no data is found for user
+    """
+
+    sql = text("SELECT id, name, rating FROM Users WHERE id=:user_id")
+    with create_db_connection() as db:
+        result = db.execute(sql, {"user_id": user_id}).fetchone()
+        if result:
+            return result[:3]
+        else:
+            raise ValueError(f"No result for user with id {user_id}")
 
 
 def create_user(username: str, rating: int = 1200):
