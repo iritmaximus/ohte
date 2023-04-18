@@ -9,8 +9,22 @@ After that run
 poetry install
 ```
 
-## Running
-### By importing the class directly
+## Using the project
+### API
+After running
+```bash
+uvicorn src.api:app
+```
+the api can be found at `localhost:8000/api`.
+All of the api paths can be found in [architecture](./architecture.md).
+
+
+
+#### Note
+Add `--reload` flag to the uvicorn command to "hot-reload" the api while making changes
+
+
+### The chess rating calculations
 
 Project can be run by importing class `ChessRating` from `chess.py`
 and invoking
