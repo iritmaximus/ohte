@@ -7,7 +7,8 @@ readme = "README.md"
 
 
 [tool.poe.tasks]
-start = "echo 'Nothing to run yet, import class to run'"
+start = "uvicorn src.api:app"
+dev = "uvicorn src.api:app --reload"
 test = "coverage run --branch -m pytest src --timeout=5"
 testhtml = "coverage html"
 openhtml = "firefox htmlcov/index.html"
