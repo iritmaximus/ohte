@@ -132,7 +132,10 @@ class TestPostgresItems(TestCase):
         self.assertRaises(ValueError, db.update_user_rating, 10, 1134)
 
     def test_get_all_users(self):
-        test_result = [{"name": "moi", "rating": 1000}, {"name": "hei", "rating": 1200}]
+        test_result = [
+            {"username": "moi", "rating": 1000},
+            {"username": "hei", "rating": 1200},
+        ]
         result = db.get_all_users()
         self.assertEqual(result, test_result)
 
