@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS Games (
     result varchar(10),
     white_id integer,
     black_id integer,
+    rated boolean default true,
     foreign key (white_id)
         references Users (id)
             on delete set null,
