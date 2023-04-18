@@ -22,7 +22,7 @@ user = FastAPI()
 class User(BaseModel):
     """Model for user, for creating new user"""
 
-    name: str
+    username: str
     rating: int | None = None
 
 
@@ -40,7 +40,7 @@ async def root():
 async def api_create_user(item: User, response: Response):
     """Creates a new user to database with users name and rating being
     in req body:
-        {"name": str, "rating": int}
+        {"username": str, "rating": int}
 
     :param item: the req body containing the user data
     :param response: fastapi response obj, can modify status codes
@@ -49,11 +49,11 @@ async def api_create_user(item: User, response: Response):
     :returns 404: error with the error message for ex. if the user exists
     """
     try:
-        create_user(item.name, item.rating)
+        create_user(item.username, item.rating)
     except ValueError as e:
-        response.status_code = 404
+        response.status_code = 403
         return {"error": f"{e}"}
-    return {"message": "ok", "user": item}
+    return {"message": "user created", "user": item}
 
 
 @user.get("/{user_id}")
@@ -64,4 +64,4 @@ async def user_by_id(user_id: int | None = None):
     :returns 200: the user with the corresponding id
     """
     user = get_user_data(user_id)
-    return {"user_id": user[0], "username": user[1], "rating": user[2]}
+    return user
