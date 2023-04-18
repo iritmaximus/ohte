@@ -38,29 +38,25 @@ def get_all_users():
         return None
 
 
-def get_user_rating(username: str):
-    """Get user's rating by username
+def get_user_rating(user_id: int):
+    """Get user's rating by user_id
 
-    :param username: username of the user
-    :raises ValueError: if the user doesnt exist
+    :param user_id: id of the user
+    :raises ValueError: if the user or rating doesnt exist
     """
 
-    user_id = get_user_id(username)
-    if not user_id:
-        raise ValueError("User not found")
+    if get_user_data(user_id) is None:
+        raise ValueError(f"No user found with id {user_id}")
 
     sql = text("SELECT rating FROM Users WHERE id=:user_id")
     with create_db_connection() as db:
         result = db.execute(sql, {"user_id": user_id}).fetchone()
         if result:
             return result[0]
-
-        # cant test this :( rip 100% as to result to be none would mean something went wrong with
-        # the connection (internet) or there was concurrency errors
-        raise ValueError(f"No rating found for id {user_id}")
+        raise ValueError(f"No rating found with id {user_id}")
 
 
-def get_user_id(username: str):
+def get_user_id(username: str) -> int | None:
     """Returns the id of the user by it's username
 
     :param username: username of the user
@@ -75,24 +71,22 @@ def get_user_id(username: str):
         return None
 
 
-def get_user_data(user_id: int) -> Tuple[int, str, int]:
+def get_user_data(user_id: int):
     """Queries the database for user by id and returns
         user id,
         name,
         rating
 
     :param user_id: id of the user
-    :returns: user id, name and rating
-    :raises ValueError: if no data is found for user
+    :returns: user id, name and rating as dict | None if no user found
     """
 
     sql = text("SELECT id, name, rating FROM Users WHERE id=:user_id")
     with create_db_connection() as db:
         result = db.execute(sql, {"user_id": user_id}).fetchone()
         if result:
-            return result[:3]
-        else:
-            raise ValueError(f"No result for user with id {user_id}")
+            return {"user_id": result[0], "username": result[1], "rating": result[2]}
+        return None
 
 
 def create_user(username: str, rating: int = 1200):
@@ -113,16 +107,17 @@ def create_user(username: str, rating: int = 1200):
         db.commit()
 
 
-def update_user_rating(username: str, rating: int):
+def update_user_rating(user_id: int, rating: int):
     """
     Updates the rating of a player
-    :param username: username of the player
+
+    :param user_id: id of the player
     :param rating: new rating of the player ("full rating" not how much it changed)
     :raises ValueError: if the user does not exist
     """
-    if not check_user_exists(username):
-        raise ValueError("User does not exist")
-    user_id = get_user_id(username)
+
+    if get_user_data(user_id) is None:
+        raise ValueError(f"No user found with id {user_id}")
 
     sql = text("UPDATE Users SET rating=:rating WHERE id=:user_id")
     with create_db_connection() as db:

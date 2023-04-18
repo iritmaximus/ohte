@@ -55,6 +55,10 @@ class TestDBPostgresWithoutItems(TestCase):
         result = self.db.execute(sql).fetchone()
         self.assertEqual(result[0], "moi")
 
+    def test_get_all_users_no_users(self):
+        result = db.get_all_users()
+        self.assertEqual(result, None)
+
     def tearDown(self):
         self.db.close()
 
@@ -113,19 +117,33 @@ class TestPostgresItems(TestCase):
         self.assertRaises(ValueError, db.create_user, "moi")
 
     def test_get_user_rating_exists(self):
-        result = db.get_user_rating("moi")
+        result = db.get_user_rating(1)
         self.assertEqual(result, 1000)
 
     def test_get_user_rating_doesnt_exist(self):
-        self.assertRaises(ValueError, db.get_user_rating, "heippa")
+        self.assertRaises(ValueError, db.get_user_rating, 10)
 
     def test_update_user_rating_exists(self):
-        db.update_user_rating("moi", 1205)
-        result = db.get_user_rating("moi")
+        db.update_user_rating(1, 1205)
+        result = db.get_user_rating(1)
         self.assertEqual(result, 1205)
 
     def test_update_user_rating_doest_exist(self):
-        self.assertRaises(ValueError, db.update_user_rating, "hellou", 1134)
+        self.assertRaises(ValueError, db.update_user_rating, 10, 1134)
+
+    def test_get_all_users(self):
+        test_result = [{"name": "moi", "rating": 1000}, {"name": "hei", "rating": 1200}]
+        result = db.get_all_users()
+        self.assertEqual(result, test_result)
+
+    def test_get_user_data_exists(self):
+        test_user = {"user_id": 1, "username": "moi", "rating": 1000}
+        result = db.get_user_data(1)
+        self.assertEqual(result, test_user)
+
+    def test_get_user_data_doesnt_exist(self):
+        result = db.get_user_data(10)
+        self.assertEqual(result, None)
 
     def tearDown(self):
         self.db.close()
