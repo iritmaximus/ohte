@@ -16,12 +16,12 @@ jobs:
       - name: Install packages
         run: poetry install
 
-      - name: Run pylint
-        run: poetry run pylint src
-
       - name: Run tests
         env:
           POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
           TEST_POSTGRES_URL: ${{ secrets.TEST_POSTGRES_URL }}
           ENV: test
         run: poetry run pytest src
+
+      - name: Run pylint
+        run: poetry run pylint src
