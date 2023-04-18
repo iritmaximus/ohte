@@ -33,7 +33,7 @@ def get_all_users():
         if result:
             rows = []
             for x in result:
-                rows.append({"name": x[0], "rating": x[1]})
+                rows.append({"username": x[0], "rating": x[1]})
             return rows
         return None
 
