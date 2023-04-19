@@ -54,21 +54,21 @@ Only users path is functional by now, others are placeholders.
 
 #### /api/users
 
-* GET [users](localhost:8000/api/users) returns all users in the database with their `id`, `username` and `rating`
-* POST [users](localhost:8000/api/users) adds user given in the request body, ex. {"username": "<wanted_name>", "rating": <int>}
-* GET [users](localhost:8000/api/users/<int>) returns same data but of one user (selected by id)
+* GET [users](http://localhost:8000/api/users) returns all users in the database with their `id`, `username` and `rating`
+* POST [users](http://localhost:8000/api/users) adds user given in the request body, ex. {"username": "<wanted_name>", "rating": <int>}
+* GET [users](http://localhost:8000/api/users/<user_id>) returns same data but of one user (selected by id)
 
 #### /api/rating
 
-* GET [users](localhost:8000/api/rating) returns all users in the database with their `id`, `username` and `rating` *sorted by their rating*
-* GET [users](localhost:8000/api/rating/<int>) returns the rating of the user with corresponding id
+* GET [users](http://localhost:8000/api/rating) returns all users in the database with their `id`, `username` and `rating` *sorted by their rating*
+* GET [users](http://localhost:8000/api/rating/<user_id>) returns the rating of the user with corresponding id
 
 #### /api/chess
 
-* GET [users](localhost:8000/api/chess) returns all games in the database
+* GET [users](http://localhost:8000/api/chess) returns all games in the database
 
 #### /api/search
 This is purely an idea, could possibly be dropped at any moment
 
-* GET [users](localhost:8000/api/search) ability to search the games or users somehow, dont know yet.
-* GET [users](localhost:8000/api/search/user/<username>) search users by username
+* GET [users](http://localhost:8000/api/search) ability to search the games or users somehow, dont know yet.
+* GET [users](http://localhost:8000/api/search/user/<username>) search users by username
