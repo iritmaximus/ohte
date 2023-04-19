@@ -1,4 +1,5 @@
 from unittest import TestCase, mock
+from pytest import mark
 from sqlalchemy import text, exc, create_engine
 import os
 import sqlite3
@@ -8,6 +9,7 @@ import src.db as db
 from src import config
 
 
+@mark.database
 @mock.patch.dict(os.environ, {"POSTGRES_URL": os.getenv("TEST_POSTGRES_URL")})
 class TestDBPostgresWithoutItems(TestCase):
     def setUp(self):
@@ -71,6 +73,7 @@ class TestDBPostgresWithoutItems(TestCase):
         cls.engine.dispose()
 
 
+@mark.database
 @mock.patch.dict(os.environ, {"POSTGRES_URL": os.getenv("TEST_POSTGRES_URL")})
 class TestPostgresItems(TestCase):
     def setUp(self):

@@ -1,4 +1,5 @@
 from unittest import TestCase, mock
+from pytest import mark
 from fastapi.testclient import TestClient
 from sqlalchemy import text, create_engine
 import os
@@ -8,6 +9,7 @@ import src.config as config
 import src.db as db
 
 
+@mark.userapi
 @mock.patch.dict(os.environ, {"POSTGRES_URL": os.getenv("TEST_POSTGRES_URL")})
 class TestUserApi(TestCase):
     def setUp(self):

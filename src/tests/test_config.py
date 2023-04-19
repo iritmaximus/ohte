@@ -1,8 +1,10 @@
-import os
 from unittest import TestCase, mock
-import config
+from pytest import mark
+import os
+from src import config
 
 
+@mark.config
 class TestConfigWithMock(TestCase):
     @mock.patch.dict(os.environ, {"POSTGRES_URL": "testurl.com"})
     def test_postgres_db_url_is_set_correctly(self):

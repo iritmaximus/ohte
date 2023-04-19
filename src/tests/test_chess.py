@@ -1,8 +1,10 @@
-import unittest
+from unittest import TestCase
+from pytest import mark
 from src.chess import ChessRating
 
 
-class TestChess(unittest.TestCase):
+@mark.chess
+class TestChess(TestCase):
     def setUp(self):
         self.rating = ChessRating(1200, 1000)
 
