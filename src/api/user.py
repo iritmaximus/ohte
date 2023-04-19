@@ -1,11 +1,20 @@
 """
 Implements an interface to users
 
+Paths:
+    GET     /api/users
+    POST    /api/users
+    GET     /api/users/<user_id>
+
+    * GET /api/users returns all users
+    * POST /api/users creates new user with req body contents
+    * GET /api/users/<user_id> returns user with the id
+
 TODO:
     Player id by name
-    Player rating by id
+    Player rating by id         DONE (in /api/rating)
 
-    Add new player
+    Add new player              DONE
     Update player rating
     Update player name
 """
