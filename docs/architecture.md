@@ -50,15 +50,14 @@ The `config` takes care of the environment variables. It reads the `.env` file i
 `TEST_POSTGRES_URL` and `ENV`. These can be used by invoking the functions
 * `db_url()`
 * `env()`
+
 The `TEST_POSTGRES_URL` is reserved for test mocking.
 The environment variables can be used with `from src import config` and then accessing the functions with `config.`. prefix.
 
 ### Database
 The `db.py` handles the interaction with the database. All queries are implemented as functions in this file.
-Example functions are
-* `get_all_users()` returns a list of all users
-* `get_user_rating(user_id)` returns the rating of the user with user_id
-* `create_user(username, rating)` creates new user with the given params
+More details about the queryfunctions can be found from the docstrings.
+
 
 The most important function however is the `create_db_connection(engine)`.
 The function returns a connection to the database that can be then
