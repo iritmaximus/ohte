@@ -25,6 +25,7 @@ rating.
 * `expected_scores()`
 * `calculate_chess_rating(white_adjustment, black_adjustment)`
 
+These functions are called by the `game_result()` method.
 * `expected_scores()` calculates the likelihood of each player
 winning that is needed for the final formula to calculate the ratings.
 The expected score is based on the rating difference.
