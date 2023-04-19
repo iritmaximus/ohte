@@ -20,6 +20,29 @@ depending on the result.
           black
       }
 ```
+`ChessRating` uses few helper functions to calculate the final
+rating.
+* `expected_scores()`
+* `calculate_chess_rating(white_adjustment, black_adjustment)`
+
+* `expected_scores()` calculates the likelihood of each player
+winning that is needed for the final formula to calculate the ratings.
+The expected score is based on the rating difference.
+
+> "It then follows that for each 400 rating points of advantage over
+the opponent, the expected score is magnified ten times in
+comparison to the opponent's expected score." ~[Elo rating system](https://en.wikipedia.org/wiki/Elo_rating_system#Mathematical_details)
+
+* `calculate_chess_rating(white_adjustment, black_adjustment)`
+calculates the rating with the expected score. More information
+about the formula can be found from [wikipedia](https://en.wikipedia.org/wiki/Elo_rating_system#Theory).
+The adjustment values mentioned in the parameters are the amount
+the rating is wanted to change per one game. In this project at
+the moment the value is `24` when according to the formula
+$K=16$ is for masters and $K=32$ is for weaker players.
+
+
+
 
 ### Config
 The `config` takes care of the environment variables. It reads the `.env` file in the root of the project for `POSTGRES_URL`,
