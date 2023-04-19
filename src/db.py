@@ -3,12 +3,11 @@ Acts as an interface to a postgresql-db connection
 """
 
 from sqlalchemy import text
-from typing import Tuple  # for type hint
 
 import src
 
 
-def check_user_exists(username: str):
+def check_user_exists(username: str) -> bool:
     """Checks if user exists in the database
 
     :param username: username to check
@@ -21,27 +20,11 @@ def check_user_exists(username: str):
     return False
 
 
-def get_all_users():
-    """Queries the database for all users and their ratings
-
-    :returns: list of users and ratings
-    """
-
-    sql = text("SELECT name, rating FROM Users")
-    with create_db_connection() as db:
-        result = db.execute(sql).fetchall()
-        if result:
-            rows = []
-            for x in result:
-                rows.append({"username": x[0], "rating": x[1]})
-            return rows
-        return None
-
-
-def get_user_rating(user_id: int):
+def get_user_rating(user_id: int) -> int:
     """Get user's rating by user_id
 
     :param user_id: id of the user
+    :returns: username
     :raises ValueError: if the user or rating doesnt exist
     """
 
@@ -49,6 +32,25 @@ def get_user_rating(user_id: int):
         raise ValueError(f"No user found with id {user_id}")
 
     sql = text("SELECT rating FROM Users WHERE id=:user_id")
+    with create_db_connection() as db:
+        result = db.execute(sql, {"user_id": user_id}).fetchone()
+        if result:
+            return result[0]
+        raise ValueError(f"No rating found with id {user_id}")
+
+
+def get_username(user_id: int) -> str:
+    """Get user's username by user_id
+
+    :param user_id: id of the user
+    :returns: username
+    :raises ValueError: if the user or rating doesnt exist
+    """
+
+    if get_user_data(user_id) is None:
+        raise ValueError(f"No user found with id {user_id}")
+
+    sql = text("SELECT name FROM Users WHERE id=:user_id")
     with create_db_connection() as db:
         result = db.execute(sql, {"user_id": user_id}).fetchone()
         if result:
@@ -71,7 +73,7 @@ def get_user_id(username: str) -> int | None:
         return None
 
 
-def get_user_data(user_id: int):
+def get_user_data(user_id: int) -> dict:
     """Queries the database for user by id and returns
         user id,
         name,
@@ -86,6 +88,23 @@ def get_user_data(user_id: int):
         result = db.execute(sql, {"user_id": user_id}).fetchone()
         if result:
             return {"user_id": result[0], "username": result[1], "rating": result[2]}
+        return None
+
+
+def get_all_users() -> list:
+    """Queries the database for all users and their ratings
+
+    :returns: list of users and ratings
+    """
+
+    sql = text("SELECT name, rating FROM Users")
+    with create_db_connection() as db:
+        result = db.execute(sql).fetchall()
+        if result:
+            rows = []
+            for item in result:
+                rows.append({"username": item[0], "rating": item[1]})
+            return rows
         return None
 
 
@@ -123,6 +142,19 @@ def update_user_rating(user_id: int, rating: int):
     with create_db_connection() as db:
         db.execute(sql, {"rating": rating, "user_id": user_id})
         db.commit()
+
+
+def get_ratings() -> list:
+    """Query the database for users sorted by their rating
+
+    :returns: list of users
+    """
+    sql = text("SELECT rating, name FROM Users ORDER BY rating DESC")
+    with create_db_connection() as db:
+        result = db.execute(sql).fetchall()
+        # parse empty element out (rating, username,)
+        #                                          ^
+        return [{"rating": item[0], "username": item[1]} for item in result]
 
 
 def create_db_connection(engine=src.engine):
