@@ -11,7 +11,7 @@ Paths:
     * GET /api/users/<user_id> returns user with the id
 
 TODO:
-    Player id by name
+    Player id by name           DONE (can be gotten from /api/users/<user_id>)
     Player rating by id         DONE (in /api/rating)
 
     Add new player              DONE
@@ -22,7 +22,7 @@ TODO:
 from fastapi import FastAPI, Response
 from pydantic import BaseModel
 
-from src.db import get_all_users, create_user, get_user_data
+from src.db import get_all_users, create_user, get_user_data, update_user_rating
 
 user = FastAPI()
 
@@ -33,6 +33,12 @@ class User(BaseModel):
 
     username: str
     rating: int | None = None
+
+
+class Rating(BaseModel):
+    """Model for updating rating of an user"""
+
+    rating: int
 
 
 @user.get("/")
@@ -74,3 +80,24 @@ async def user_by_id(user_id: int | None = None):
     """
     user = get_user_data(user_id)
     return user
+
+
+@user.put("/{user_id}")
+async def update_rating(item: Rating, user_id: int, response: Response):
+    """Updates the user rating based on req body
+
+    req body needs to include:
+        {"rating": <new_rating>}
+
+    :param user_id: user's id
+    :return 201: user gets updated succesfully
+    :return 400: incorrect user body
+    :return 404: no user found
+    """
+
+    try:
+        update_user_rating(user_id, item.rating)
+        return {"message": "User updated successfully"}
+    except ValueError as e:
+        response.status_code = 404
+        return {"error": f"{e}"}
