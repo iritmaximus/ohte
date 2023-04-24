@@ -100,20 +100,20 @@ class TestPostgresItems(TestCase):
         self.assertEqual(result, 2)
 
     def test_check_user_exists_true(self):
-        result = db.check_user_exists("moi")
+        result = db.check_user_exists(1)
         self.assertEqual(result, True)
 
     def test_check_user_exists_false(self):
-        result = db.check_user_exists("hellurei")
+        result = db.check_user_exists(10)
         self.assertEqual(result, False)
 
     def test_create_user_doesnt_exist(self):
-        result = db.check_user_exists("moikka")
+        result = db.check_user_exists(3)
         self.assertEqual(result, False)
 
     def test_create_user_new(self):
         db.create_user("moikka")
-        result = db.check_user_exists("moikka")
+        result = db.check_user_exists(3)
         self.assertEqual(result, True)
 
     def test_create_user_exists(self):
@@ -150,6 +150,13 @@ class TestPostgresItems(TestCase):
     def test_get_user_data_doesnt_exist(self):
         result = db.get_user_data(10)
         self.assertEqual(result, None)
+
+    def test_get_username_exists(self):
+        result = db.get_username(1)
+        self.assertEqual(result, "moi")
+
+    def test_get_username_doesnt_exist(self):
+        self.assertRaises(ValueError, db.get_username, 10)
 
     def tearDown(self):
         self.db.close()

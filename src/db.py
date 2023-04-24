@@ -7,7 +7,7 @@ from sqlalchemy import text
 import src
 
 
-def check_user_exists(username: str) -> bool:
+def check_username(username: str) -> bool:
     """Checks if user exists in the database
 
     :param username: username to check
@@ -20,6 +20,25 @@ def check_user_exists(username: str) -> bool:
     return False
 
 
+def check_user_exists(user_id: int) -> bool:
+    """Checks if user exists by it's id
+
+    It does so by checking if querying for username returns
+    anything and returns the corresponding boolean.
+
+    :param user_id: the id of the user
+    :returns: wheter the user exists
+    """
+    try:
+        user = get_username(user_id)
+    except ValueError:
+        return False
+
+    if user:
+        return True
+    return False
+
+
 def get_user_rating(user_id: int) -> int:
     """Get user's rating by user_id
 
@@ -28,7 +47,7 @@ def get_user_rating(user_id: int) -> int:
     :raises ValueError: if the user or rating doesnt exist
     """
 
-    if get_user_data(user_id) is None:
+    if not check_user_exists(user_id):
         raise ValueError(f"No user found with id {user_id}")
 
     sql = text("SELECT rating FROM Users WHERE id=:user_id")
@@ -47,15 +66,12 @@ def get_username(user_id: int) -> str:
     :raises ValueError: if the user or rating doesnt exist
     """
 
-    if get_user_data(user_id) is None:
-        raise ValueError(f"No user found with id {user_id}")
-
     sql = text("SELECT name FROM Users WHERE id=:user_id")
     with create_db_connection() as db:
         result = db.execute(sql, {"user_id": user_id}).fetchone()
         if result:
             return result[0]
-        raise ValueError(f"No rating found with id {user_id}")
+        raise ValueError(f"No user found with id {user_id}")
 
 
 def get_user_id(username: str) -> int | None:
@@ -117,7 +133,7 @@ def create_user(username: str, rating: int = 1200):
     :raises ValueError: if user exists with username
     """
 
-    if check_user_exists(username):
+    if check_username(username):
         raise ValueError("User already exists")
 
     with create_db_connection() as db:
@@ -135,7 +151,7 @@ def update_user_rating(user_id: int, rating: int):
     :raises ValueError: if the user does not exist
     """
 
-    if get_user_data(user_id) is None:
+    if not check_user_exists(user_id):
         raise ValueError(f"No user found with id {user_id}")
 
     sql = text("UPDATE Users SET rating=:rating WHERE id=:user_id")
