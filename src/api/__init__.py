@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
 from src.api.chess import chess
-from src.api.user import user
+from src.api.user import user_api as user
 from src.api.rating import rating
 from src.api.search import search
 

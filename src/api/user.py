@@ -24,7 +24,7 @@ from pydantic import BaseModel
 
 from src.db import get_all_users, create_user, get_user_data, update_user_rating
 
-user = FastAPI()
+user_api = FastAPI()
 
 
 # figure a way to do this without pylint errors
@@ -41,7 +41,7 @@ class Rating(BaseModel):
     rating: int
 
 
-@user.get("/")
+@user_api.get("/")
 async def root():
     """Lists all users in the database
 
@@ -51,7 +51,7 @@ async def root():
     return {"users": users}
 
 
-@user.post("/", status_code=201)
+@user_api.post("/", status_code=201)
 async def api_create_user(item: User, response: Response):
     """Creates a new user to database with users name and rating being
     in req body:
@@ -65,13 +65,13 @@ async def api_create_user(item: User, response: Response):
     """
     try:
         create_user(item.username, item.rating)
-    except ValueError as e:
+    except ValueError as error:
         response.status_code = 403
-        return {"error": f"{e}"}
+        return {"error": f"{error}"}
     return {"message": "user created", "user": item}
 
 
-@user.get("/{user_id}")
+@user_api.get("/{user_id}")
 async def user_by_id(user_id: int | None = None):
     """Get single user by id
 
@@ -82,7 +82,7 @@ async def user_by_id(user_id: int | None = None):
     return user
 
 
-@user.put("/{user_id}")
+@user_api.put("/{user_id}")
 async def update_rating(item: Rating, user_id: int, response: Response):
     """Updates the user rating based on req body
 
@@ -98,6 +98,6 @@ async def update_rating(item: Rating, user_id: int, response: Response):
     try:
         update_user_rating(user_id, item.rating)
         return {"message": "User updated successfully"}
-    except ValueError as e:
+    except ValueError as error:
         response.status_code = 404
-        return {"error": f"{e}"}
+        return {"error": f"{error}"}
