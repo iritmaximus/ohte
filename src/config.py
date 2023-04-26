@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def db_url():
+def db_url() -> str:
     """:returns: the db url defined in .env file"""
     postgres_url = getenv("POSTGRES_URL")
     if not postgres_url:
@@ -18,7 +18,7 @@ def db_url():
     return postgres_url
 
 
-def env():
+def env() -> str:
     """:returns: current environment, prod, dev etc"""
     env_var = getenv("ENV")
     if not env_var:

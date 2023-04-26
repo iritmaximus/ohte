@@ -15,7 +15,7 @@ TODO:
     Player rating by id         DONE (in /api/rating)
 
     Add new player              DONE
-    Update player rating
+    Update player rating        DONE
     Update player name
 """
 
