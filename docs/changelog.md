@@ -11,3 +11,9 @@ game result with ChessRating class
 - Users are stored in database.
 - Users have an api interface
 - Database and user api has 100% test coverage
+
+# Week 5
+- better documentation
+- rating api was finished
+
+# Week 6

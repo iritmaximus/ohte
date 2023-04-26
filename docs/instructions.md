@@ -10,10 +10,25 @@ poetry install
 ```
 
 ## Using the project
+
+### Database
+
+This project utilizes `postgres` (also known as `postgresql`) as it's database.
+The `postgres` instance contains two databases, one for production and the other for tests.
+They can be named freely.
+
+Before you can use the app you need to have an postgres user with permissions to use the previously
+mentioned databases.
+
+[More details can be found here.](./docs/postgres)
+
+
+
+
 ### API
 After running
 ```bash
-uvicorn src.api:app
+$ uvicorn src.api:app
 ```
 the api can be found at `localhost:8000/api`.
 All of the api paths can be found in [architecture](./architecture.md).
