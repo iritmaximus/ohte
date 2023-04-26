@@ -54,11 +54,11 @@ or
 ```bash
 $ psql -U postgres
 ```
-if you are not logged in as the postgres user where `postgres` is the user's name.
+if you are not logged in as the postgres user where `postgres` is the user's name you wish to login in as.
 
 ### Creating user/database
 As the postgres user, run
-```sql
+```bash
 [postgres]$ createuser --interactive
 ```
 
