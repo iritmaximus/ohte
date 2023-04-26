@@ -16,4 +16,7 @@
 | 13.4. | 5    | changed the db library because simplicity |
 | 17.4. | 4    | finished work on the db and added fastapi to project |
 | 18.4. | 5    | worked on user api and tests for it, documentation writing |
-| yht   | 46.5 |  |
+| 19.4. | 4    | wrote documentation, implemented rating api |
+| 24.4. | 2    | reformatted db.py, implemented `update_user_rating()` |
+| xx.x. | x    | did x |
+| yht   | 52.5 |  |
