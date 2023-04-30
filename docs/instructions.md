@@ -20,7 +20,7 @@ They can be named freely.
 Before you can use the app you need to have an postgres user with permissions to use the previously
 mentioned databases.
 
-[More details can be found here.](./docs/postgres)
+[More details can be found here.](./postgres)
 
 
 
