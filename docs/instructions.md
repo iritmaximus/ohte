@@ -23,6 +23,20 @@ mentioned databases.
 [More details can be found here.](./postgres.md)
 
 
+### Env-file
+
+Environment variables are configured by an `.env` file placed in the projects root (NOT `src`~~!!). This file contains all of the "secret" values, for example the database url.
+The file contains three variables:
+* `POSTGRES_URL`
+* `TEST_POSTGRES_URL`
+* `ENV`
+
+The values should be:
+* `POSTGRES_URL` is the postgres database connection string that contains the username, password, hostname, port number and database name.
+This variable is used for the "production" database. The database name needs to be `ohte`
+[More information about the url string](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING)
+* `TEST_POSTGRES_URL` is same format as the former `POSTGRES_URL`. This is used as the "test" database. The database name needs to be `test_ohte`.
+* `ENV` is the environment the app is wanted to be run as, for example "production" or "development"
 
 
 ### API
