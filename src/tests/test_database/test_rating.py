@@ -2,7 +2,6 @@ from unittest import TestCase, mock
 from pytest import mark
 from sqlalchemy import text, exc, create_engine
 import os
-import sqlite3
 import sqlalchemy
 
 import src.database.ratings as database
