@@ -22,7 +22,12 @@ TODO:
 from fastapi import FastAPI, Response
 from pydantic import BaseModel
 
-from src.db import get_all_users, create_user, get_user_data, update_user_rating
+from src.database.user import (
+    get_all_users,
+    create_user,
+    get_user_data,
+)
+from src.database.ratings import update_user_rating
 
 user_api = FastAPI()
 

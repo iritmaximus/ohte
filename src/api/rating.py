@@ -18,7 +18,8 @@ TODO:
 
 from fastapi import FastAPI, Response
 
-from src.db import get_ratings, get_user_data
+from src.database.ratings import get_ratings
+from src.database.user import get_user_data
 
 rating = FastAPI()
 

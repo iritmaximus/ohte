@@ -5,14 +5,13 @@ from sqlalchemy import text, create_engine
 import os
 
 from src.api import app
-import src.config as config
-import src.db as db
+from src import config
 
 
 @mark.ratingapi
 class TestRating(TestCase):
     def setUp(self):
-        conn = db.create_db_connection(self.engine)
+        conn = self.engine.connect()
 
         droptablesql = open("./src/sql/droptables.sql", "r")
         schemasql = open("./src/sql/schema.sql", "r")
@@ -63,7 +62,7 @@ class TestRating(TestCase):
         self.assertEqual(response.json(), test_response)
 
     def add_users(self):
-        conn = db.create_db_connection(self.engine)
+        conn = self.engine.connect()
         insertusersql = text(
             "INSERT INTO Users (name, rating) VALUES ('moi', 1300), ('hellou', 1420)"
         )
@@ -75,7 +74,6 @@ class TestRating(TestCase):
     @classmethod
     def setUpClass(cls):
         cls.engine = create_engine(config.db_url())
-
         cls.app = TestClient(app)
 
     @classmethod

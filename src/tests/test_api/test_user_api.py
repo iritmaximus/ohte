@@ -5,15 +5,13 @@ from sqlalchemy import text, create_engine
 import os
 
 from src.api import app
-import src.config as config
-import src.db as db
+from src import config
 
 
 @mark.userapi
-@mock.patch.dict(os.environ, {"POSTGRES_URL": os.getenv("TEST_POSTGRES_URL")})
 class TestUserApi(TestCase):
     def setUp(self):
-        conn = db.create_db_connection(self.engine)
+        conn = self.engine.connect()
 
         droptablesql = open("./src/sql/droptables.sql", "r")
         schemasql = open("./src/sql/schema.sql", "r")
@@ -70,7 +68,7 @@ class TestUserApi(TestCase):
         self.assertEqual(response.status_code, 422)
 
     def add_users(self):
-        conn = db.create_db_connection(self.engine)
+        conn = self.engine.connect()
         insertusersql = text(
             "INSERT INTO Users (name, rating) VALUES ('moi', 1500), ('hellou', 1215)"
         )

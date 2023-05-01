@@ -1,24 +1,29 @@
 from unittest import TestCase, mock
 from pytest import mark
 import os
+
+
 from src import config
 
 
 @mark.config
 class TestConfigWithMock(TestCase):
-    @mock.patch.dict(os.environ, {"POSTGRES_URL": "testurl.com"})
     def test_postgres_db_url_is_set_correctly(self):
         postgres_url = config.db_url()
-        self.assertEqual(postgres_url, "testurl.com")
+        self.assertEqual(postgres_url.split("/")[-1], "test_ohte")
 
     @mock.patch.dict(os.environ, {"ENV": "test"})
     def test_environment_is_set(self):
         env = config.env()
         self.assertEqual(env, "test")
 
-    @mock.patch.dict(os.environ, clear=True)
+    @mock.patch.dict(os.environ, {"ENV": "production"}, clear=True)
     def test_postgres_is_not_set(self):
-        self.assertRaises(EnvironmentError, config.db_url)
+        self.assertRaises(ValueError, config.db_url)
+
+    @mock.patch.dict(os.environ, {"ENV": "test"}, clear=True)
+    def test_test_postgres_is_not_set(self):
+        self.assertRaises(ValueError, config.db_url)
 
     @mock.patch.dict(os.environ, clear=True)
     def test_env_not_set(self):
