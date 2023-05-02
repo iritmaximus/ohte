@@ -18,5 +18,10 @@
 | 18.4. | 5    | worked on user api and tests for it, documentation writing |
 | 19.4. | 4    | wrote documentation, implemented rating api |
 | 24.4. | 2    | reformatted db.py, implemented `update_user_rating()` |
+
+| 26.4. | 4    | wrote documentation about postgres database |
+| 30.4. | 3    | worked on games implementation + refactoring|
+| 1.5.  | 6    | finished reformatting... |
+| 2.5.  | 3    | worked on games api |
 | xx.x. | x    | did x |
-| yht   | 52.5 |  |
+| yht   | 68.5 |  |

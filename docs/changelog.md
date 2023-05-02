@@ -17,3 +17,5 @@ game result with ChessRating class
 - rating api was finished
 
 # Week 6
+- lot's and lot's of reformatting
+- implemented games api
