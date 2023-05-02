@@ -7,7 +7,15 @@ Are implemented as functions because of tests, could just be variables
 from os import getenv
 
 
-def db_url():
+def db_url() -> str:
+    """Returns the postgres db url depending on the environment variable ENV
+    ENV==production returns POSTGRES_URL
+    ENV==test returns TEST_POSTGRES_URL
+
+    :returns: the url
+    :raises ValueError: if the url is not found
+
+    """
     env_var = env()
     if env_var == "production":
         url_var = getenv("POSTGRES_URL", None)
@@ -16,18 +24,22 @@ def db_url():
                 f"Environment variable POSTGRES_URL not set, found {url_var}"
             )
         return url_var
-    else:
-        test_url_var = getenv("TEST_POSTGRES_URL", None)
-        if test_url_var is None:
-            raise ValueError(
-                f"Environment variable TEST_POSTGRES_URL not set, found {test_url_var}"
-            )
-        return test_url_var
+
+    test_url_var = getenv("TEST_POSTGRES_URL", None)
+    if test_url_var is None:
+        raise ValueError(
+            f"Environment variable TEST_POSTGRES_URL not set, found {test_url_var}"
+        )
+    return test_url_var
 
 
-def env():
-    env = getenv("ENV", "production")
-    return env
+def env() -> str:
+    """Returns the environment variable ENV value
+
+    Defaults to production
+    :returns: environment the app needs to run in"""
+    env_var = getenv("ENV", "production")
+    return env_var
 
 
 def telegram() -> list[str]:
