@@ -12,6 +12,7 @@ dev = "uvicorn src.api:app --reload"
 test = "coverage run --branch -m pytest src --timeout=5"
 testhtml = "coverage html"
 openhtml = "firefox htmlcov/index.html"
+openhtml-bin = "firefox-bin htmlcov/index.html"
 test_full = ["test", "testhtml"]
 test_full_open = ["test", "testhtml", "openhtml"]
 coverage-report = ["testhtml"]
@@ -27,9 +28,10 @@ pythonpath = [
 [tool.poetry.dependencies]
 python = "^3.10"
 flask = "^2.2.3"
-psycopg2 = "^2.9.6"
 sqlalchemy = "^2.0.9"
 fastapi = {extras = ["all"], version = "^0.95.1"}
+pyrogram = "^2.0.104"
+psycopg2 = "^2.9.6"
 
 
 [tool.poetry.group.dev.dependencies]

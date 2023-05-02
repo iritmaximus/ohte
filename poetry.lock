@@ -897,6 +897,17 @@ files = [
 ]
 
 [[package]]
+name = "pyaes"
+version = "1.6.1"
+description = "Pure-Python Implementation of the AES block-cipher and common modes of operation"
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "pyaes-1.6.1.tar.gz", hash = "sha256:02c1b1405c38d3c370b085fb952dd8bea3fadcee6411ad99f312cc129c536d8f"},
+]
+
+[[package]]
 name = "pydantic"
 version = "1.10.7"
 description = "Data validation and settings management using python type hints"
@@ -977,6 +988,35 @@ tomlkit = ">=0.10.1"
 [package.extras]
 spelling = ["pyenchant (>=3.2,<4.0)"]
 testutils = ["gitpython (>3)"]
+
+[[package]]
+name = "pyrogram"
+version = "2.0.104"
+description = "Elegant, modern and asynchronous Telegram MTProto API framework in Python for users and bots"
+category = "main"
+optional = false
+python-versions = "~=3.7"
+files = [
+    {file = "Pyrogram-2.0.104-py3-none-any.whl", hash = "sha256:20f9bebd3a42f6bf9e90b798a431ccc065a19baa3dd3ff94be6ee32e5ed038bd"},
+    {file = "Pyrogram-2.0.104.tar.gz", hash = "sha256:c8588d3f379efbacbeead42d31745dc2482de6dbcc19c46ebfb2bf25b780a67e"},
+]
+
+[package.dependencies]
+pyaes = "1.6.1"
+pysocks = "1.7.1"
+
+[[package]]
+name = "pysocks"
+version = "1.7.1"
+description = "A Python SOCKS client module. See https://github.com/Anorov/PySocks for more information."
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+files = [
+    {file = "PySocks-1.7.1-py27-none-any.whl", hash = "sha256:08e69f092cc6dbe92a0fdd16eeb9b9ffbc13cadfe5ca4c7bd92ffb078b293299"},
+    {file = "PySocks-1.7.1-py3-none-any.whl", hash = "sha256:2725bd0a9925919b9b51739eea5f9e2bae91e83288108a9ad338b2e3a4435ee5"},
+    {file = "PySocks-1.7.1.tar.gz", hash = "sha256:3f8804571ebe159c380ac6de37643bb4685970655d3bba243530d6558b799aa0"},
+]
 
 [[package]]
 name = "pytest"
@@ -1608,4 +1648,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "d614a5bfb7a6bdab0506cb1e55b9a841979aa56c7e15674da0ff6aa15785e400"
+content-hash = "f8e2a2b3377bdd7bc0bac357510770b966652e9d7e19ec551080d89c6b5569b0"
