@@ -34,7 +34,22 @@ class TestGames(TestCase):
         result = self.db.execute(sql).fetchall()
         self.assertEqual(result, [])
 
-    def test_create_games(self):
+    def test_get_all_games(self):
+        self.add_games()
+        test_result = [
+            (1, "1-0", 1, 2),
+            (2, "0.5-0.5", 1, 2),
+            (3, "0-1", 2, 1),
+        ]
+
+        result = database.get_all_games()
+        self.assertEqual(result, test_result)
+
+    def test_get_all_games_empty(self):
+        result = database.get_all_games()
+        self.assertEqual(result, [])
+
+    def test_add_games_helper(self):
         self.add_games()
         test_result = [("1-0",), ("0.5-0.5",), ("0-1",)]
 
@@ -42,21 +57,25 @@ class TestGames(TestCase):
         result = self.db.execute(sql).fetchall()
         self.assertEqual(result, test_result)
 
-    # id serial primary key not null,
-    # result varchar(10),
-    # white_id integer,
-    # black_id integer,
-    # rated boolean default true,
-    # def test_get_all_games(self):
-    #     self.add_games()
-    #     test_result = [
-    #         {1},
-    #         {2},
-    #         {3},
-    #     ]
+    def test_create_game(self):
+        database.create_game(1, 2, "1-0", True)
+        sql = text("SELECT id FROM GAMES")
+        result = self.db.execute(sql).fetchone()
+        self.assertEqual(result[0], 1)
 
-    #     result = database.get_all_games()
-    #     self.assertEqual(result, test_result)
+    def test_create_game_incorrect_user(self):
+        self.assertRaises(ValueError, database.create_game, 1, 10, "1-0", True)
+
+    def test_create_game_incorrect_result(self):
+        self.assertRaises(
+            ValueError, database.create_game, 1, 10, "0193cd.tbkemjgcrh.pntuea", True
+        )
+
+    def test_create_game_incorrect_result_format(self):
+        self.assertRaises(ValueError, database.create_game, 1, 10, "1-1", True)
+
+    def test_create_game_incorrect_rated(self):
+        self.assertRaises(ValueError, database.create_game, 1, 10, "1-0", "hi")
 
     def add_games(self):
         sql = text(
