@@ -1,3 +1,4 @@
+"""Serves the telegram bot, provides the app variable"""
 from pyrogram import Client
 from config import telegram
 
