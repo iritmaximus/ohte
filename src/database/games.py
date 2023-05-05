@@ -57,7 +57,7 @@ def create_game(
                 },
             )
             conn.commit()
-    except exc.IntegrityError:
-        raise ValueError(f"Both users not found with ids {white_id}, {black_id}")
+    except exc.IntegrityError as error:
+        raise ValueError(f"Both users not found with ids {white_id}, {black_id}") from error
     except exc.DataError as error:
-        raise ValueError(f"Incorrect values given, {error}")
+        raise ValueError(f"Incorrect values given, {error}") from error
