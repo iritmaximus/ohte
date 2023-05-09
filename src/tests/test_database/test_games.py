@@ -24,6 +24,24 @@ class TestGames(TestCase):
         self.db.execute(insertusersql)
         self.db.commit()
 
+    def tearDown(self):
+        self.db.close()
+
+    @classmethod
+    def setUpClass(cls):
+        cls.engine = create_engine(config.db_url())
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.engine.dispose()
+
+    def add_games(self):
+        sql = text(
+            "INSERT INTO Games (result, white_id, black_id) VALUES ('1-0', 1, 2), ('0.5-0.5', 1, 2), ('0-1', 2, 1)"
+        )
+        self.db.execute(sql)
+        self.db.commit()
+
     def test_using_test_db(self):
         sql = text("SELECT current_database()")
         db_name = self.db.execute(sql).fetchone()
@@ -64,33 +82,24 @@ class TestGames(TestCase):
         self.assertEqual(result[0], 1)
 
     def test_create_game_incorrect_user(self):
-        self.assertRaises(ValueError, database.create_game, 1, 10, "1-0", True)
+        self.assertRaises(KeyError, database.create_game, 1, 10, "1-0", True)
 
     def test_create_game_incorrect_result(self):
         self.assertRaises(
-            ValueError, database.create_game, 1, 10, "0193cd.tbkemjgcrh.pntuea", True
+            ValueError, database.create_game, 1, 2, "0193cd.tbkemjgcrh.pntuea", True
         )
 
     def test_create_game_incorrect_result_format(self):
-        self.assertRaises(ValueError, database.create_game, 1, 10, "1-1", True)
+        self.assertRaises(ValueError, database.create_game, 1, 2, "1-1", True)
 
     def test_create_game_incorrect_rated(self):
-        self.assertRaises(ValueError, database.create_game, 1, 10, "1-0", "hi")
+        self.assertRaises(ValueError, database.create_game, 1, 2, "1-0", "hi")
 
-    def add_games(self):
-        sql = text(
-            "INSERT INTO Games (result, white_id, black_id) VALUES ('1-0', 1, 2), ('0.5-0.5', 1, 2), ('0-1', 2, 1)"
-        )
-        self.db.execute(sql)
-        self.db.commit()
+    def test_create_game_missing_white_id(self):
+        self.assertRaises(TypeError, database.create_game, None, 2, "1-0")
 
-    def tearDown(self):
-        self.db.close()
+    def test_create_game_missing_black_id(self):
+        self.assertRaises(TypeError, database.create_game, 1, None, "1-0")
 
-    @classmethod
-    def setUpClass(cls):
-        cls.engine = create_engine(config.db_url())
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.engine.dispose()
+    def test_create_game_missing_black_id(self):
+        self.assertRaises(TypeError, database.create_game, 1, 2, None)

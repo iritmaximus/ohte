@@ -7,8 +7,8 @@ CREATE TABLE IF NOT EXISTS Users (
 CREATE TABLE IF NOT EXISTS Games (
     id serial primary key not null,
     result varchar(10),
-    white_id integer,
-    black_id integer,
+    white_id integer not null,
+    black_id integer not null,
     rated boolean default true,
     foreign key (white_id)
         references Users (id)

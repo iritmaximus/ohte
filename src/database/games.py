@@ -31,16 +31,21 @@ def create_game(
     :param result: the result of the game, 1-0, 0-1 or 0.5-0.5
     :param rated: if the game is rated and counted to the rating
     :param engine: the engine to connect to the database with
+
+    :raises ValueError:, if values are incorrect format
+    :raises TypeError:, if values are not set
+    :raises KeyError: if users don't exist
     """
     sql = text(
-        """INSERT INTO Games
+        """
+    INSERT INTO Games
         (white_id, black_id, result, rated)
     VALUES
         (:white_id, :black_id, :result, :rated)
     """
     )
-    if not white_id or not black_id or not result:
-        raise ValueError("All values not set")
+    if white_id is None or black_id is None or result is None:
+        raise TypeError("All values not set")
 
     if result not in ["1-0", "0-1", "0.5-0.5"]:
         raise ValueError(f"Incorrect result value, {result}, {type(result)}")
@@ -54,10 +59,11 @@ def create_game(
                     "black_id": black_id,
                     "result": result,
                     "rated": rated,
-                },
+                }
             )
             conn.commit()
+
     except exc.IntegrityError as error:
-        raise ValueError(f"Both users not found with ids {white_id}, {black_id}") from error
+        raise KeyError(f"Both users not found with ids {white_id}, {black_id}") from error
     except exc.DataError as error:
         raise ValueError(f"Incorrect values given, {error}") from error

@@ -38,7 +38,7 @@ async def list_all_games():
 
 
 @games.post("/", status_code=201)
-async def create_new_game(item: GameResult):
+async def create_new_game(item: GameResult, response: Response):
     """Creates a new game based on the request body
 
     Request body should contain:
@@ -52,6 +52,13 @@ async def create_new_game(item: GameResult):
     """
     try:
         create_game(item.white_id, item.black_id, item.result, item.rated)
-    except OSError:
-        Response.status_code = 404
-        print("todo")
+        return {"message": "game created", "game": {
+            "white_id": item.white_id, "black_id": item.black_id, "result": item.result, "rated": item.rated
+                }
+            }
+    except ValueError as error:
+        response.status_code = 400
+        return {"error": f"game creation failed, {error}"}
+    except KeyError as error:
+        response.status_code = 404
+        return {"error": f"game creation failed, {error}" }
