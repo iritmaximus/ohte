@@ -53,9 +53,15 @@ class ChessRating:
         """
 
         if isinstance(white_score, int) and isinstance(white_score, float):
-            raise TypeError(f"Incorrect type of white_score, {white_score}: {type(white_score)}, should be int or float")
+            raise TypeError(
+                f"Incorrect type of white_score, {white_score}: {type(white_score)}, \
+                        should be int or float"
+            )
         if isinstance(black_score, int) and isinstance(black_score, float):
-            raise TypeError(f"Incorrect type of black_score, {black_score}: {type(black_score)}, should be int or float")
+            raise TypeError(
+                f"Incorrect type of black_score, {black_score}: {type(black_score)}, \
+                        should be int or float"
+            )
 
         if (
             (white_score == 1 and black_score == 0)
