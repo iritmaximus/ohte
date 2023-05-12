@@ -7,4 +7,4 @@ from src import config
 load_dotenv()
 
 
-engine = sqlalchemy.create_engine(config.db_url(), echo=config.env() != "production")
+engine = sqlalchemy.create_engine(config.db_url(), echo=(config.env() == "production"))
