@@ -15,9 +15,10 @@ openhtml = "firefox htmlcov/index.html"
 openhtml-bin = "firefox-bin htmlcov/index.html"
 test_full = ["test", "testhtml"]
 test_full_open = ["test", "testhtml", "openhtml"]
+format = "black src"
 coverage-report = ["testhtml"]
 lint = "pylint src"
-build = ["test", "testhtml", "lint"]
+build = ["test", "testhtml", "format", "lint"]
 
 
 [tool.pytest.ini_options]
