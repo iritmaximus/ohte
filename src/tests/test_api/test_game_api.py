@@ -67,7 +67,10 @@ class TestUserApi(TestCase):
         self.add_users()
 
         game = {"white_id": "1", "black_id": "2", "result": "1-0"}
-        test_return_body = {"message": "game created", "game": {"white_id": 1, "black_id": 2, "result": "1-0", "rated": True}}
+        test_return_body = {
+            "message": "game created",
+            "game": {"white_id": 1, "black_id": 2, "result": "1-0", "rated": True},
+        }
 
         response = self.app.post("/api/games", json=game)
         self.assertEqual(response.status_code, 201)
@@ -86,7 +89,9 @@ class TestUserApi(TestCase):
         self.add_users()
 
         game = {"white_id": "2309", "black_id": "2", "result": "1-0"}
-        test_result = {'error': "game creation failed, 'Both users not found with ids 2309, 2'"} 
+        test_result = {
+            "error": "game creation failed, 'Both users not found with ids 2309, 2'"
+        }
 
         response = self.app.post("/api/games", json=game)
         self.assertEqual(response.status_code, 404)
@@ -96,7 +101,9 @@ class TestUserApi(TestCase):
         self.add_users()
 
         game = {"black_id": "2", "result": "1-0"}
-        test_result = {'error': "game creation failed, 'Both users not found with ids 2309, 2'"} 
+        test_result = {
+            "error": "game creation failed, 'Both users not found with ids 2309, 2'"
+        }
 
         response = self.app.post("/api/games", json=game)
         self.assertEqual(response.status_code, 422)
@@ -105,15 +112,20 @@ class TestUserApi(TestCase):
         self.add_users()
 
         game = {"white_id": None, "black_id": "2", "result": "1-0"}
-        test_result = {'error': "game creation failed, 'Both users not found with ids 2309, 2'"} 
+        test_result = {
+            "error": "game creation failed, 'Both users not found with ids 2309, 2'"
+        }
 
         response = self.app.post("/api/games", json=game)
         self.assertEqual(response.status_code, 422)
+
     def test_add_game_incrrect_result(self):
         self.add_users()
 
         game = {"white_id": "1", "black_id": "2", "result": "1-1"}
-        test_result = {'error': "game creation failed, Incorrect result value, 1-1, <class 'str'>"}
+        test_result = {
+            "error": "game creation failed, Incorrect result value, 1-1, <class 'str'>"
+        }
 
         response = self.app.post("/api/games", json=game)
         self.assertEqual(response.status_code, 400)
