@@ -12,7 +12,9 @@ TODO:
 """
 from fastapi import FastAPI, Response
 from pydantic import BaseModel
+
 from src.database.games import get_all_games, create_game
+from src.database.ratings import update_ratings_with_game_result
 
 
 games = FastAPI()
@@ -48,17 +50,30 @@ async def create_new_game(item: GameResult, response: Response):
         rated: if the game should be counted to the rating of the players
 
     :returns 201: game created successfully
+    :returns 400: error adding the user to database
     :returns 404: user not found or other error
     """
     try:
         create_game(item.white_id, item.black_id, item.result, item.rated)
-        return {"message": "game created", "game": {
-            "white_id": item.white_id, "black_id": item.black_id, "result": item.result, "rated": item.rated
-                }
-            }
     except ValueError as error:
         response.status_code = 400
         return {"error": f"game creation failed, {error}"}
     except KeyError as error:
         response.status_code = 404
-        return {"error": f"game creation failed, {error}" }
+        return {"error": f"game creation failed, {error}"}
+
+    # calculate new ratings for the players
+    try:
+        update_ratings_with_game_result(item.white_id, item.black_id, item.result)
+    except ValueError as error:
+        return {"error": f"rating calculation failed, {error}"}
+
+    return {
+        "message": "game created",
+        "game": {
+            "white_id": item.white_id,
+            "black_id": item.black_id,
+            "result": item.result,
+            "rated": item.rated,
+        },
+    }

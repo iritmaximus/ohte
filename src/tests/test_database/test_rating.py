@@ -4,8 +4,9 @@ from sqlalchemy import text, exc, create_engine
 import os
 import sqlalchemy
 
-import src.database.ratings as database
 from src import config
+from src.chess import ChessRating
+import src.database.ratings as database
 
 
 @mark.database
@@ -45,6 +46,17 @@ class TestDatabaseRatings(TestCase):
 
     def test_update_user_rating_doest_exist(self):
         self.assertRaises(ValueError, database.update_user_rating, 10, 1134)
+
+    def test_update_ratings_with_game_result(self):
+        test_rating = ChessRating(1000, 1200)
+        test_rating.game_result(1, 0)
+        test_rating_result = test_rating.white
+
+        database.update_ratings_with_game_result(1, 2, "1-0")
+        new_rating = database.get_user_rating(1)
+        x = database.get_user_rating(2)
+        print(new_rating, x)
+        self.assertEqual(new_rating, test_rating_result)
 
     def tearDown(self):
         self.db.close()

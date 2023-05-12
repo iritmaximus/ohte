@@ -5,6 +5,7 @@ from sqlalchemy import text
 
 from src import engine as default_engine
 from src.database.helper import check_user_exists
+from src.chess import ChessRating
 
 
 def get_user_rating(user_id: int, engine=default_engine) -> int:
@@ -40,6 +41,53 @@ def update_user_rating(user_id: int, rating: int, engine=default_engine):
     with engine.connect() as db:
         db.execute(sql, {"rating": rating, "user_id": user_id})
         db.commit()
+
+
+def update_ratings_with_game_result(
+    white_id: int, black_id: int, result: str, engine=default_engine
+):
+    """Updates players ratings to database according to a game result
+
+    :param white_id: id of the white player
+    :param black_id: id of the black player
+    :param result: game result, either 1-0, 0-1 or 0.5-0.5 as a string
+    :param engine: engine to make connections with
+    :raises ValueError: if initial ratings cant be found for both users
+    """
+
+    white_rating = get_user_rating(white_id)
+    black_rating = get_user_rating(black_id)
+    if not white_rating or not black_rating:
+        raise ValueError("Ratings for both users not found")
+
+    ratings = ChessRating(white_rating, black_rating)
+    result_list = result.split("-")
+    ratings.game_result(float(result_list[0]), float(result_list[1]))
+
+    sql = text(
+        """
+    UPDATE Users SET 
+        rating = New.rating
+    FROM (VALUES
+        (:white_id, :white_rating),
+        (:black_id, :black_rating)
+    ) AS New (id, rating)
+    WHERE Users.id=New.id
+    """
+    )
+
+    # TODO tests for incorrect values and such
+    with engine.connect() as conn:
+        conn.execute(
+            sql,
+            {
+                "white_id": white_id,
+                "white_rating": ratings.white,
+                "black_id": black_id,
+                "black_rating": ratings.black,
+            },
+        )
+        conn.commit()
 
 
 def get_ratings(engine=default_engine) -> list:
