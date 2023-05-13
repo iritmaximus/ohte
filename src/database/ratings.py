@@ -18,11 +18,25 @@ def get_user_rating(user_id: int, engine=default_engine) -> int:
     """
 
     sql = text("SELECT rating FROM Users WHERE id=:user_id")
-    with engine.connect() as db:
-        result = db.execute(sql, {"user_id": user_id}).fetchone()
+    with engine.connect() as conn:
+        result = conn.execute(sql, {"user_id": user_id}).fetchone()
         if result:
             return result[0]
         raise ValueError(f"No rating found with id {user_id}")
+
+
+def get_ratings(engine=default_engine) -> list:
+    """Query the database for users sorted by their rating
+
+    :param engine: the engine the connection to database is made with
+    :returns: list of users
+    """
+    sql = text("SELECT rating, name FROM Users ORDER BY rating DESC")
+    with engine.connect() as conn:
+        result = conn.execute(sql).fetchall()
+        # parse empty element out (rating, username,)
+        #                                          ^
+        return [{"rating": item[0], "username": item[1]} for item in result]
 
 
 def update_user_rating(user_id: int, rating: int, engine=default_engine):
@@ -38,9 +52,9 @@ def update_user_rating(user_id: int, rating: int, engine=default_engine):
         raise ValueError(f"No user found with id {user_id}")
 
     sql = text("UPDATE Users SET rating=:rating WHERE id=:user_id")
-    with engine.connect() as db:
-        db.execute(sql, {"rating": rating, "user_id": user_id})
-        db.commit()
+    with engine.connect() as conn:
+        conn.execute(sql, {"rating": rating, "user_id": user_id})
+        conn.commit()
 
 
 def update_ratings_with_game_result(
@@ -88,17 +102,3 @@ def update_ratings_with_game_result(
             },
         )
         conn.commit()
-
-
-def get_ratings(engine=default_engine) -> list:
-    """Query the database for users sorted by their rating
-
-    :param engine: the engine the connection to database is made with
-    :returns: list of users
-    """
-    sql = text("SELECT rating, name FROM Users ORDER BY rating DESC")
-    with engine.connect() as db:
-        result = db.execute(sql).fetchall()
-        # parse empty element out (rating, username,)
-        #                                          ^
-        return [{"rating": item[0], "username": item[1]} for item in result]

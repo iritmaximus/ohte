@@ -14,8 +14,8 @@ def get_all_games(engine=default_engine):
     """
 
     sql = text("SELECT * FROM Games")
-    with engine.connect() as db:
-        result = db.execute(sql).fetchall()
+    with engine.connect() as conn:
+        result = conn.execute(sql).fetchall()
         if result:
             return [(x[:-1]) for x in result]
         return []

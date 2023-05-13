@@ -32,8 +32,8 @@ def get_username(user_id: int, engine=default_engine) -> str:
     """
 
     sql = text("SELECT name FROM Users WHERE id=:user_id")
-    with engine.connect() as db:
-        result = db.execute(sql, {"user_id": user_id}).fetchone()
+    with engine.connect() as conn:
+        result = conn.execute(sql, {"user_id": user_id}).fetchone()
         if result:
             return result[0]
         raise ValueError(f"No user found with id {user_id}")
@@ -48,8 +48,8 @@ def get_user_id(username: str, engine=default_engine) -> int | None:
     """
 
     sql = text("SELECT id FROM Users WHERE name=:username")
-    with engine.connect() as db:
-        result = db.execute(sql, {"username": username}).fetchone()
+    with engine.connect() as conn:
+        result = conn.execute(sql, {"username": username}).fetchone()
         if result:
             return result[0]
         return None
@@ -67,8 +67,8 @@ def get_user_data(user_id: int, engine=default_engine) -> dict:
     """
 
     sql = text("SELECT id, name, rating FROM Users WHERE id=:user_id")
-    with engine.connect() as db:
-        result = db.execute(sql, {"user_id": user_id}).fetchone()
+    with engine.connect() as conn:
+        result = conn.execute(sql, {"user_id": user_id}).fetchone()
         if result:
             return {"user_id": result[0], "username": result[1], "rating": result[2]}
         return None
@@ -82,8 +82,8 @@ def get_all_users(engine=default_engine) -> list:
     """
 
     sql = text("SELECT name, rating FROM Users")
-    with engine.connect() as db:
-        result = db.execute(sql).fetchall()
+    with engine.connect() as conn:
+        result = conn.execute(sql).fetchall()
         if result:
             rows = []
             for item in result:
@@ -105,7 +105,7 @@ def create_user(username: str, rating: int = 1200, engine=default_engine):
     if check_username(username, engine):
         raise ValueError("User already exists")
 
-    with engine.connect() as db:
+    with engine.connect() as conn:
         sql = text("INSERT INTO Users (name, rating) VALUES (:username, :rating)")
-        db.execute(sql, {"username": username, "rating": rating})
-        db.commit()
+        conn.execute(sql, {"username": username, "rating": rating})
+        conn.commit()

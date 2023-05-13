@@ -17,8 +17,8 @@ def check_user_exists(user_id: int, engine=default_engine) -> bool:
     """
 
     sql = text("SELECT id FROM Users WHERE id=:user_id")
-    with engine.connect() as db:
-        result = db.execute(sql, {"user_id": user_id}).fetchone()
+    with engine.connect() as conn:
+        result = conn.execute(sql, {"user_id": user_id}).fetchone()
         if result:
             return True
         return False
