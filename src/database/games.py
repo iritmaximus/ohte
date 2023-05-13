@@ -24,7 +24,7 @@ def get_all_games(engine=default_engine):
 def create_game(
     white_id: int, black_id: int, result: str, rated: bool = True, engine=default_engine
 ):
-    """Creates new user to database
+    """Creates new game to database
 
     :param white_id: white player's id
     :param black_id: black's id
