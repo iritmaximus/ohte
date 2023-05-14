@@ -1,0 +1,42 @@
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_DB=ohte
+      - POSTGRES_USER=ohte
+      - POSTGRES_PASSWORD=unsecure
+      - POSTGRES_HOST
+      - POSTGER_INITDB_ARGS="-c listen_addresses = '*'"
+    ports:
+    - "6432:5432"
+    volumes:
+      # - ./src/sql/schema.sql:/docker-entrypoint-initdb.d/initdb.sql
+      - pgdata:/var/lib/postgresql/data
+
+    healthcheck:
+      test: sh -c "pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}"
+      interval: 3s
+      timeout: 2s
+      retries: 30
+
+  test_db:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_DB=ohte
+      - POSTGRES_USER=ohte
+      - POSTGRES_PASSWORD=unsecure
+      - POSTGRES_HOST
+      - POSTGER_INITDB_ARGS="-c listen_addresses = '*'"
+    ports:
+    - "7432:5432"
+    healthcheck:
+      test: sh -c "pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}"
+      interval: 3s
+      timeout: 2s
+      retries: 30
+
+volumes:
+  pgdata:
+
