@@ -7,14 +7,11 @@ chess players in a chess club. The rating is counted based on game-results and
 uses official [Elo](https://en.wikipedia.org/wiki/Chess_rating_system#Elo_rating_system) rating system.
 
 
-## Note
-Before installation make sure you have at least `python>=3.10` and `poetry>=1.4` installed
-
 ## Documentation
 
+* [instructions](./docs/instructions.md)
 * [changelog](./docs/changelog.md)
 * [hours](./docs/hours.md)
-* [instructions](./docs/instructions.md)
 * [tests](./docs/tests.md)
 * [requirements](./docs/requirements.md)
 * [architecture](./docs/architecture.md)

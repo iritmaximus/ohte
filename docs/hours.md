@@ -18,10 +18,14 @@
 | 18.4. | 5    | worked on user api and tests for it, documentation writing |
 | 19.4. | 4    | wrote documentation, implemented rating api |
 | 24.4. | 2    | reformatted db.py, implemented `update_user_rating()` |
-
 | 26.4. | 4    | wrote documentation about postgres database |
 | 30.4. | 3    | worked on games implementation + refactoring|
 | 1.5.  | 6    | finished reformatting... |
 | 2.5.  | 3    | worked on games api |
-| xx.x. | x    | did x |
-| yht   | 68.5 |  |
+| 3.5. | 1    | fixed a build error, read up on documentation for future things |
+| 5.5. | 5    | fully implemented games api, small ohter fixes |
+| 9.5. | 3    | made tests for games api, reformatted + further developed games api |
+| 12.5. | 4   | made rating update when adding a game |
+| 13.5. | 1   | small bugfixing, cleaned up project |
+| 14.5. | 7   | finished up on the project, moved database to docker |
+| yht   | 107.5 |  |

@@ -19,3 +19,8 @@ game result with ChessRating class
 # Week 6
 - lot's and lot's of reformatting
 - implemented games api
+
+# Week 7
+- rating updates on adding a game
+- moved database to docker
+- better docs
