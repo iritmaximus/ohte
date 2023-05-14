@@ -41,6 +41,9 @@ poe database-remove
 ```
 and it will recreate the databases from scratch. Note that YOU WILL LOSE YOUR DATA IN THE DATABASE.
 
+#### Note
+You have to have two terminals, running the database and other the project.
+
 
 #### Create them yourself
 
