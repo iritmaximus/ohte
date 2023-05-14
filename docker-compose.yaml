@@ -3,15 +3,13 @@ services:
     image: postgres
     restart: always
     environment:
-      - POSTGRES_DB=ohte
-      - POSTGRES_USER=ohte
+      - POSTGRES_DB
+      - POSTGRES_USER
       - POSTGRES_PASSWORD=unsecure
-      - POSTGRES_HOST
       - POSTGER_INITDB_ARGS="-c listen_addresses = '*'"
     ports:
     - "6432:5432"
     volumes:
-      # - ./src/sql/schema.sql:/docker-entrypoint-initdb.d/initdb.sql
       - pgdata:/var/lib/postgresql/data
 
     healthcheck:
@@ -24,10 +22,9 @@ services:
     image: postgres
     restart: always
     environment:
-      - POSTGRES_DB=ohte
-      - POSTGRES_USER=ohte
+      - POSTGRES_DB
+      - POSTGRES_USER
       - POSTGRES_PASSWORD=unsecure
-      - POSTGRES_HOST
       - POSTGER_INITDB_ARGS="-c listen_addresses = '*'"
     ports:
     - "7432:5432"
