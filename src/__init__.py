@@ -8,3 +8,7 @@ load_dotenv()
 
 
 engine = sqlalchemy.create_engine(config.db_url(), echo=config.env() == "production")
+
+with engine.connect() as conn:
+    conn.execute(sqlalchemy.text(open("./src/sql/schema.sql", "r").read()))
+    conn.commit()
