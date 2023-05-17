@@ -14,8 +14,8 @@ def db_url() -> str:
 
     :returns: the url
     :raises ValueError: if the url is not found
-
     """
+
     env_var = env()
     if env_var == "production":
         url_var = getenv("POSTGRES_URL", None)
