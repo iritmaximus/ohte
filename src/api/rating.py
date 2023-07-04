@@ -19,7 +19,7 @@ TODO:
 from fastapi import FastAPI, Response
 
 from src.database.ratings import get_ratings
-from src.database.user import get_user_data
+from src.database.user import get_one_user
 
 rating = FastAPI()
 
@@ -42,7 +42,7 @@ async def user_rating(user_id: int | None, response: Response):
     :returns 404: if user with the id is not found
     """
     # TODO queries unneccesary information + needs to format data
-    user = get_user_data(user_id)
+    user = get_one_user(user_id)
     if user:
         user_sorted = {"rating": user["rating"], "username": user["username"]}
         return {"message": "Rating of a single user", "user": user_sorted}

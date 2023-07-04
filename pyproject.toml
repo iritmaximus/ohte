@@ -39,6 +39,7 @@ sqlalchemy = "^2.0.9"
 fastapi = {extras = ["all"], version = "^0.95.1"}
 pyrogram = "^2.0.104"
 psycopg2-binary = "^2.9.6"
+bcrypt = "^4.0.1"
 
 
 [tool.poetry.group.dev.dependencies]

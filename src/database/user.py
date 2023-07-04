@@ -55,7 +55,7 @@ def get_user_id(username: str, engine=default_engine) -> int | None:
         return None
 
 
-def get_user_data(user_id: int, engine=default_engine) -> dict:
+def get_one_user(user_id: int, engine=default_engine) -> dict:
     """Queries the database for user by id and returns
         user id,
         name,
@@ -66,11 +66,11 @@ def get_user_data(user_id: int, engine=default_engine) -> dict:
     :returns: user id, name and rating as dict | None if no user found
     """
 
-    sql = text("SELECT id, name, rating FROM Users WHERE id=:user_id")
+    sql = text("SELECT id, name, rating FROM Users WHERE id=:id")
     with engine.connect() as conn:
-        result = conn.execute(sql, {"user_id": user_id}).fetchone()
+        result = conn.execute(sql, {"id": user_id}).fetchone()
         if result:
-            return {"user_id": result[0], "username": result[1], "rating": result[2]}
+            return {"id": result[0], "username": result[1], "rating": result[2]}
         return None
 
 
@@ -81,31 +81,67 @@ def get_all_users(engine=default_engine) -> list:
     :returns: list of users and ratings
     """
 
-    sql = text("SELECT name, rating FROM Users")
+    sql = text("SELECT id, name, rating FROM Users")
     with engine.connect() as conn:
         result = conn.execute(sql).fetchall()
         if result:
             rows = []
             for item in result:
-                rows.append({"username": item[0], "rating": item[1]})
+                rows.append({"id": item[0], "username": item[1], "rating": item[2]})
             return rows
         return None
 
 
-def create_user(username: str, rating: int = 1200, engine=default_engine):
+def create_user(username: str, password_hash: str, engine=default_engine) -> list:
     """
     Creates a new user with username and rating and inserts it to the db
 
     :param username: username of the new user
-    :param rating: the rating the new user has (defaults to 1200)
+    :param password_hash: users password hashed NOT IN CLEARTEXT
     :param engine: wanted engine to create the db connection with
     :raises ValueError: if user exists with username
     """
 
+    if not username:
+        raise ValueError("No username given")
+    if not password_hash:
+        raise ValueError("Password not defined")
     if check_username(username, engine):
         raise ValueError("User already exists")
 
     with engine.connect() as conn:
-        sql = text("INSERT INTO Users (name, rating) VALUES (:username, :rating)")
-        conn.execute(sql, {"username": username, "rating": rating})
+        sql = text(
+            """
+        INSERT INTO Users 
+            (name, password_hash) 
+        VALUES 
+            (:username, :password_hash)
+        RETURNING
+            (Users.id, Users.name) 
+        """
+        )
+        result = conn.execute(
+            sql, {"username": username, "password_hash": password_hash}
+        ).fetchone()
+        conn.commit()
+
+        if result:
+            result = result[0].strip("()")
+            r_id, r_username = result.split(",")
+            return {"id": r_id, "username": r_username}
+        return []
+
+
+def delete_user(user_id: int, engine=default_engine):
+    """Deletes user from database based on id
+
+    :param user_id: id of the user that is being deleted
+    raises ValueError: if no id
+    """
+    if not user_id:
+        raise ValueError("no id given")
+
+    sql = text("DELETE FROM Users WHERE id=:id")
+    with engine.connect() as conn:
+        conn.execute(sql, {"id": user_id})
         conn.commit()
