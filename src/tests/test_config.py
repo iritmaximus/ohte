@@ -10,9 +10,8 @@ from src import config
 class TestConfigWithMock(TestCase):
     def test_postgres_db_url_is_set_correctly(self):
         postgres_url = config.db_url()
-        # the port number for the test db
-        # -> are you using the test db
-        self.assertTrue("7432" in postgres_url)
+        # correct port
+        self.assertTrue("5432" in postgres_url)
 
     @mock.patch.dict(os.environ, {"ENV": "test"})
     def test_environment_is_set(self):
