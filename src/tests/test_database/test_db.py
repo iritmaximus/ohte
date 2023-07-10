@@ -1,8 +1,9 @@
-from unittest import TestCase, mock
+from unittest import TestCase
 from pytest import mark
 from sqlalchemy import text, exc, create_engine
 import os
 import sqlalchemy
+
 import src.database.helper as helper
 import src.database.user as database
 from src import config
@@ -62,7 +63,7 @@ class TestDatabaseBase(TestCase):
         self.assertEqual(result, False)
 
     def add_user(self):
-        sql = text("INSERT INTO Users (name, rating) VALUES ('moi', 1000)")
+        sql = text("INSERT INTO Users (name, password_hash, rating) VALUES ('moi', 'supersecret', 1000)")
         self.db.execute(sql)
         self.db.commit()
 

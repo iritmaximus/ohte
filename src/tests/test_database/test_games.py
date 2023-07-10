@@ -1,4 +1,4 @@
-from unittest import TestCase, mock
+from unittest import TestCase
 from pytest import mark
 from sqlalchemy import text, exc, create_engine
 import os
@@ -19,7 +19,7 @@ class TestGames(TestCase):
         self.db.execute(text(schemasql.read()))
 
         insertusersql = text(
-            "INSERT INTO Users (name, rating) VALUES ('moi', 1000), ('hei', 1200)"
+            "INSERT INTO Users (name, password_hash, rating) VALUES ('moi', 'supersecret', 1000), ('hei', 'unsecure', 1200)"
         )
         self.db.execute(insertusersql)
         self.db.commit()
@@ -55,6 +55,7 @@ class TestGames(TestCase):
     def test_get_all_games(self):
         self.add_games()
         test_result = [
+            # id, result, white_id, black_id
             (1, "1-0", 1, 2),
             (2, "0.5-0.5", 1, 2),
             (3, "0-1", 2, 1),
