@@ -23,7 +23,7 @@ build = ["test", "testhtml", "format", "lint"]
 
 [tool.poe.tasks.test]
 env = {"ENV" = "test"}
-cmd = "coverage run --branch -m pytest src --timeout=5"
+cmd = "coverage run --branch -m pytest src --timeout=5 -v"
 
 
 
