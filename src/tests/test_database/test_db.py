@@ -6,6 +6,7 @@ import sqlalchemy
 
 import src.database.helper as helper
 import src.database.user as database
+import src.utils.login as login
 from src import config
 
 
@@ -18,6 +19,24 @@ class TestDatabaseBase(TestCase):
         self.db.execute(text(droptablesql.read()))
         self.db.execute(text(schemasql.read()))
         self.db.commit()
+
+    def tearDown(self):
+        self.db.close()
+
+    @classmethod
+    def setUpClass(cls):
+        cls.engine = create_engine(config.db_url())
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.engine.dispose()
+
+    def add_user(self):
+        password_hash = login.create_password_hash("supersecret")
+        sql = text("INSERT INTO Users (name, password_hash, rating) VALUES ('moi', :password_hash, 1000)")
+        self.db.execute(sql, {"password_hash": password_hash})
+        self.db.commit()
+
 
     def test_using_test_db(self):
         sql = text("SELECT current_database()")
@@ -61,19 +80,3 @@ class TestDatabaseBase(TestCase):
     def test_check_user_exists_false(self):
         result = helper.check_user_exists(10)
         self.assertEqual(result, False)
-
-    def add_user(self):
-        sql = text("INSERT INTO Users (name, password_hash, rating) VALUES ('moi', 'supersecret', 1000)")
-        self.db.execute(sql)
-        self.db.commit()
-
-    def tearDown(self):
-        self.db.close()
-
-    @classmethod
-    def setUpClass(cls):
-        cls.engine = create_engine(config.db_url())
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.engine.dispose()
