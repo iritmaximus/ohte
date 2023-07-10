@@ -14,7 +14,7 @@ from fastapi import FastAPI, Response
 from pydantic import BaseModel
 
 from src.database.games import get_all_games, create_game
-from src.database.ratings import update_ratings_with_game_result
+from src.database.user import update_ratings_with_game_result
 
 
 games = FastAPI()

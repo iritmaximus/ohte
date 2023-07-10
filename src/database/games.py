@@ -4,6 +4,8 @@ Contains all database functions that query Games
 from sqlalchemy import text, exc
 
 from src import engine as default_engine
+from src.chess import ChessRating
+from src.database.user import get_user_rating
 
 
 def get_all_games(engine=default_engine):

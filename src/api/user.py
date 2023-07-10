@@ -19,7 +19,7 @@ TODO:
     Update player name
 """
 
-from fastapi import FastAPI, Response
+from fastapi import FastAPI, Request, Response
 from pydantic import BaseModel
 
 from src.database.user import (
@@ -27,8 +27,8 @@ from src.database.user import (
     get_one_user,
     create_user,
     delete_user,
+    update_user_rating,
 )
-from src.database.ratings import update_user_rating
 from src.utils.login import create_password_hash
 
 user_api = FastAPI()
@@ -82,23 +82,6 @@ async def api_create_user(item: User, response: Response):
     return {"message": "user created", "user": new_user}
 
 
-@user_api.delete("/{user_id}")
-async def delete_user_with_id(response: Response, user_id: int | None = None):
-    """Deletes user from database
-
-    :param user_id: id of the user that is deleted
-    :returns 200: user was deleted / there was no user to begin with
-    :returns 400: if user deletion failed
-    """
-    try:
-        delete_user(user_id)
-        response.status_code = 200
-        return {"message": "User deleted"}
-    except ValueError as error:
-        response.status_code = 400
-        return {"error": f"Can't delete user, {error}"}
-
-
 @user_api.get("/{user_id}")
 async def user_by_id(user_id: int | None = None):
     """Get single user by id
@@ -108,6 +91,28 @@ async def user_by_id(user_id: int | None = None):
     """
     user = get_one_user(user_id)
     return user
+
+
+@user_api.delete("/{user_id}")
+async def delete_user_with_id(
+    request: Request, response: Response, user_id: int | None = None
+):
+    """Deletes user from database
+
+    :param user_id: id of the user that is deleted
+    :returns 200: user was deleted / there was no user to begin with
+    :returns 400: if user deletion failed
+    """
+    token = request.headers.get("Authorization")
+    print(token)
+
+    try:
+        delete_user(user_id)
+        response.status_code = 200
+        return {"message": "User deleted"}
+    except ValueError as error:
+        response.status_code = 400
+        return {"error": f"Can't delete user, {error}"}
 
 
 @user_api.put("/{user_id}")
@@ -121,6 +126,8 @@ async def update_rating(item: Rating, user_id: int, response: Response):
     :return 201: user gets updated succesfully
     :return 400: incorrect user body
     :return 404: no user found
+
+    :TODO: be able to update username and password
     """
 
     try:

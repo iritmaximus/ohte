@@ -5,54 +5,13 @@ Contains all database functions having to do with users
 from sqlalchemy import text
 
 from src import engine as default_engine
-
-
-def check_username(username: str, engine=default_engine) -> bool:
-    """Checks if user exists in the database
-
-    :param username: username to check
-    :param engine: the engine the connection to database is made with
-
-    :returns: boolean, if user exists
-    """
-
-    user_id = get_user_id(username, engine)
-    if user_id:
-        return True
-    return False
-
-
-def get_username(user_id: int, engine=default_engine) -> str:
-    """Get user's username by user_id
-
-    :param user_id: id of the user
-    :param engine: the engine the connection to database is made with
-    :returns: username
-    :raises ValueError: if the user or rating doesnt exist
-    """
-
-    sql = text("SELECT name FROM Users WHERE id=:user_id")
-    with engine.connect() as conn:
-        result = conn.execute(sql, {"user_id": user_id}).fetchone()
-        if result:
-            return result[0]
-        raise ValueError(f"No user found with id {user_id}")
-
-
-def get_user_id(username: str, engine=default_engine) -> int | None:
-    """Returns the id of the user by it's username
-
-    :param username: username of the user
-    :param engine: the engine the connection to database is made with
-    :returns: int | None, id of the user or none if no user found
-    """
-
-    sql = text("SELECT id FROM Users WHERE name=:username")
-    with engine.connect() as conn:
-        result = conn.execute(sql, {"username": username}).fetchone()
-        if result:
-            return result[0]
-        return None
+from src.database.helper import check_user_exists
+from src.database.user_utils import (
+    check_username,
+    get_user_rating,
+    parse_user_result_fetchone,
+)
+from src.chess import ChessRating
 
 
 def get_one_user(user_id: int, engine=default_engine) -> dict:
@@ -124,12 +83,7 @@ def create_user(username: str, password_hash: str, engine=default_engine) -> lis
             sql, {"username": username, "password_hash": password_hash}
         ).fetchone()
         conn.commit()
-
-        if result:
-            result = result[0].strip("()")
-            r_id, r_username = result.split(",")
-            return {"id": r_id, "username": r_username}
-        return []
+        return parse_user_result_fetchone(result)
 
 
 def delete_user(user_id: int, engine=default_engine):
@@ -141,7 +95,75 @@ def delete_user(user_id: int, engine=default_engine):
     if not user_id:
         raise ValueError("no id given")
 
-    sql = text("DELETE FROM Users WHERE id=:id")
+    sql = text(
+        "DELETE FROM Users WHERE id=:id RETURNS Users.id, Users.name, Users.rating"
+    )
     with engine.connect() as conn:
-        conn.execute(sql, {"id": user_id})
+        result = conn.execute(sql, {"id": user_id}).fetchone()
+        conn.commit()
+        return parse_user_result_fetchone(result)
+
+
+def update_user_rating(user_id: int, rating: int, engine=default_engine):
+    """
+    Updates the rating of a player
+
+    :param user_id: id of the player
+    :param rating: new rating of the player ("full rating" not how much it changed)
+    :param engine: the engine the connection to database is made with
+    :raises ValueError: if the user does not exist
+    """
+    if not check_user_exists(user_id, engine):
+        raise ValueError(f"No user found with id {user_id}")
+
+    sql = text("UPDATE Users SET rating=:rating WHERE id=:user_id")
+    with engine.connect() as conn:
+        conn.execute(sql, {"rating": rating, "user_id": user_id})
+        conn.commit()
+
+
+def update_ratings_with_game_result(
+    white_id: int, black_id: int, result: str, engine=default_engine
+):
+    """Updates players ratings to database according to a game result
+
+    :param white_id: id of the white player
+    :param black_id: id of the black player
+    :param result: game result, either 1-0, 0-1 or 0.5-0.5 as a string
+    :param engine: engine to make connections with
+    :raises ValueError: if initial ratings cant be found for both users
+    """
+
+    white_rating = get_user_rating(white_id)
+    black_rating = get_user_rating(black_id)
+    if not white_rating or not black_rating:
+        raise ValueError("Ratings for both users not found")
+
+    ratings = ChessRating(white_rating, black_rating)
+    result_list = result.split("-")
+    ratings.game_result(float(result_list[0]), float(result_list[1]))
+
+    sql = text(
+        """
+    UPDATE Users SET 
+        rating = New.rating
+    FROM (VALUES
+        (:white_id, :white_rating),
+        (:black_id, :black_rating)
+    ) AS New (id, rating)
+    WHERE Users.id=New.id
+    """
+    )
+
+    # TODO tests for incorrect values and such
+    with engine.connect() as conn:
+        conn.execute(
+            sql,
+            {
+                "white_id": white_id,
+                "white_rating": ratings.white,
+                "black_id": black_id,
+                "black_rating": ratings.black,
+            },
+        )
         conn.commit()
